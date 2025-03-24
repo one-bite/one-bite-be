@@ -1,0 +1,38 @@
+name: Build and Push to Docker Hub
+
+on:
+    push:
+        branches:
+            - "**"
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: extract branch name
+              id: vars
+              run: |
+                  ref=${GITHUB_REF##*/}
+                  if [[ "$ref" == "main" ]]; then
+                    tag="main"
+                  else
+                    tag="feature-${ref}"
+                  fi
+                  echo "TAG=$tag" >> $GITHUB_ENV
+
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Build and Push
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: true
+                  tags: heung115/spaghetti-be-${{env.TAG}}:latest
