@@ -1,11 +1,13 @@
 package code.rice.bowl.spaghetti.dto.response;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
  * 구글 auth code 로 access token 을 발급 받을 때 받게 되는 dto
  */
+@Data
 @Getter
 @NoArgsConstructor
 public class GoogleTokenResponse {
