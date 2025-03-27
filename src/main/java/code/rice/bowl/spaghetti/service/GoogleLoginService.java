@@ -1,12 +1,17 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.response.GoogleTokenResponse;
+import code.rice.bowl.spaghetti.dto.response.GoogleUserInfoResponse;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
+@Service
 public class GoogleLoginService {
     @Value("${google.oauth.client-id}")
     private String googleClientId;
@@ -55,7 +60,7 @@ public class GoogleLoginService {
         } catch (HttpClientErrorException e) {
             throw new InvalidRequestException("Check your auth code");
         } catch (Exception e) {
-            throw new RuntimeException("Unexpected error while getting token from google");
+            throw new RuntimeException("Unexpected error : google");
         }
     }
 
@@ -65,6 +70,30 @@ public class GoogleLoginService {
      * @return              요청한 사용자의 이메일.
      */
     public String getGoogleEmail(String accessToken) {
-        return "";
+        String infoUri = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<GoogleUserInfoResponse> res = new RestTemplate().exchange(
+                    infoUri,
+                    HttpMethod.GET,
+                    request,
+                    GoogleUserInfoResponse.class
+            );
+
+            GoogleUserInfoResponse info = res.getBody();
+
+            if (info != null) {
+                return info.getEmail();
+            } else {
+                throw new RuntimeException("Unexpected error : google info");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error : google info");
+        }
     }
 }
