@@ -4,13 +4,10 @@ import code.rice.bowl.spaghetti.dto.response.GoogleTokenResponse;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-@Service
-public class OAuthService {
-
+public class GoogleLoginService {
     @Value("${google.oauth.client-id}")
     private String googleClientId;
 
@@ -25,7 +22,7 @@ public class OAuthService {
      * @param authCode  auth code
      * @return          GoogleTokenResponse
      */
-    public GoogleTokenResponse getGoogleToken(String authCode) {
+    public GoogleTokenResponse getAccessToken(String authCode) {
         String tokenUri = "https://oauth2.googleapis.com/token";
 
         // 1. 인증 코드로 access 코드 요청하기
@@ -62,5 +59,12 @@ public class OAuthService {
         }
     }
 
-    public
+    /**
+     * access token 으로 사용자 이메일 정보를 가져옴.
+     * @param accessToken   현재 사용자의 access token
+     * @return              요청한 사용자의 이메일.
+     */
+    public String getGoogleEmail(String accessToken) {
+        return "";
+    }
 }
