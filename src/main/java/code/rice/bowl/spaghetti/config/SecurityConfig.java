@@ -19,13 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     // 로그인 가능한 도메인 모음.
     private static final String[] LOGIN_ONCE = {
             "/oauth/google",
+            "/oauth/naver"
     };
 
     private static final String[] PERMIT_ALL = {
@@ -37,6 +37,7 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/webjars/**",
             // 실제 무조건 허용하는 도메인
+            "/oauth/refresh",
             "/test"
     };
 

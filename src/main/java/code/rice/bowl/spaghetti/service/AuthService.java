@@ -1,9 +1,11 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.config.JwtAuthenticationFilter;
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
 import code.rice.bowl.spaghetti.dto.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotImplementedException;
 import code.rice.bowl.spaghetti.repository.UserInfoRepository;
 import code.rice.bowl.spaghetti.utils.JwtProvider;
@@ -17,8 +19,11 @@ public class AuthService {
 
     private final GoogleLoginService googleLoginService;
     private final UserInfoRepository userInfoRepository;
+    private final RedisService redisService;
 
     private final JwtProvider jwtProvider;
+
+    private final static String KEY_PREFIX = "refresh:";
 
     /**
      * 사용자 로그인하여 JWT token 반환.
@@ -35,10 +40,52 @@ public class AuthService {
         User user = loadOrCreateUser(email);
 
         // 3. JWT token 발급 하기.
-        return JwtTokenDto.of(
+        JwtTokenDto dto = JwtTokenDto.of(
                 jwtProvider.generateAccessToken(user),
                 jwtProvider.generateRefreshToken(user)
         );
+
+        // 4. 현재 사용자의 refresh token 을 redis 저장.
+        redisService.setValue(KEY_PREFIX + email, dto.refreshToken());
+
+        return dto;
+    }
+
+    /**
+     * refresh token 을 이용하여 access token 을 재 발급 함.
+     *
+     * @param token 사용자의 refresh token
+     * @return      새로운 access token 과 refresh token
+     * @throws InvalidRequestException 해당 토큰이 검증 통과 못하거나, 서버에 저장한 값이 다른 경우 발생.
+     */
+    public JwtTokenDto createTokenByRefresh(String token) {
+        // 0. 토큰 검증
+        if (!jwtProvider.isTokenValid(token)) {
+            throw new InvalidRequestException("check your refresh token!");
+        }
+
+        // 1. refresh token 의 이메일 조회.
+        String tokenEmail = jwtProvider.getEmailFromToken(token);
+
+        // 2. redis 에서 사용자 이메일 획득.
+        String storedToken = redisService.getValue(KEY_PREFIX + tokenEmail);
+
+        if (storedToken == null || !storedToken.equals(token)) {
+            throw new InvalidRequestException("check your refresh token");
+        }
+
+        // 3. JWT token 발급 하기.
+        User user = loadOrCreateUser(tokenEmail);
+
+        JwtTokenDto dto = JwtTokenDto.of(
+                jwtProvider.generateAccessToken(user),
+                jwtProvider.generateRefreshToken(user)
+        );
+
+        // 4. 현재 사용자의 refresh token 을 redis 저장.
+        redisService.setValue(KEY_PREFIX + tokenEmail, dto.refreshToken());
+
+        return dto;
     }
 
     /**

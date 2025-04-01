@@ -12,4 +12,9 @@ public class TestController {
     public ResponseEntity<?> hello() {
         return ResponseEntity.ok("Hello world.");
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok("permit all test");
+    }
 }
