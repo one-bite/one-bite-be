@@ -39,6 +39,11 @@ public class JwtProvider {
         key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * 사용자 정보로 access token 발급
+     * @param user  사용자 정보
+     * @return      String
+     */
     public String generateAccessToken(User user) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + accessTokenValidate);
@@ -50,6 +55,11 @@ public class JwtProvider {
                 .compact();
     }
 
+    /**
+     * 사용자 정보로 refresh token 발급
+     * @param user  사용자 정보
+     * @return      String
+     */
     public String generateRefreshToken(User user) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + refreshTokenValidate);
@@ -60,6 +70,11 @@ public class JwtProvider {
                 .compact();
     }
 
+    /**
+     * 토큰에서 사용자 이메일 파싱
+     * @param token 사용자 토큰
+     * @return      user email string
+     */
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -69,6 +84,11 @@ public class JwtProvider {
                 .getSubject();
     }
 
+    /**
+     * 토큰을 사용하여 인증 토큰 생성
+     * @param token 사용자 토큰
+     * @return      UsernamePasswordAuthenticationToken
+     */
     public Authentication getAuth(String token) {
         Claims claims = getClaims(token);
 
@@ -84,6 +104,11 @@ public class JwtProvider {
         );
     }
 
+    /**
+     * 토큰 유효성 검사 (서명 + 만료 여부 둘다 체크)
+     * @param token 현재 사용자 토큰 정보
+     * @return      true/false
+     */
     public boolean isTokenValid(String token) {
         try {
             Jwts.parserBuilder()
