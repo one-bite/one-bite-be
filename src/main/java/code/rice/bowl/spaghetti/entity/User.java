@@ -1,27 +1,49 @@
 package code.rice.bowl.spaghetti.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@EntityScan
+@Table(name = "users")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_info")
 public class User {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
+    private String username;
+
+    private int rating;
+
+    private int points;
+
+    @ManyToOne
+    @JoinColumn(name = "level_id")
+    private Level level;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime lastLogin;
+
+    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isNew;
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
