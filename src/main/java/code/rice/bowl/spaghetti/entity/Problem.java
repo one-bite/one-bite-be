@@ -43,6 +43,7 @@ public class Problem {
 
     private String answer;
 
+    // for knn
     @Column(columnDefinition = "jsonb")
     private String features;
 }

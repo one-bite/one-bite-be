@@ -20,12 +20,14 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    // 초기에는 이메일에서 이메일 ID로 설정.
     private String username;
 
     private int rating;
 
     private int points;
 
+    // 브론즈, 실버 같은 등급.
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
