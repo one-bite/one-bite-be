@@ -25,6 +25,7 @@ public class User {
 
     private int rating;
 
+    @Setter
     private int points;
 
     // 브론즈, 실버 같은 등급.
@@ -42,6 +43,10 @@ public class User {
 
     public boolean isNew() {
         return isNew;
+    }
+
+    public void addPoints(int additionalPoints) {
+        this.points += additionalPoints;
     }
 
     @PrePersist

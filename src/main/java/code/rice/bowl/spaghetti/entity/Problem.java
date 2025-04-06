@@ -1,7 +1,10 @@
 package code.rice.bowl.spaghetti.entity;
 
+import code.rice.bowl.spaghetti.config.JsonNodeConverter;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
+
 
 @Getter
 @Entity
@@ -30,8 +33,8 @@ public class Problem {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "jsonb")
-    private String description;
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode description;
 
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
@@ -43,7 +46,9 @@ public class Problem {
 
     private String answer;
 
-    // for knn
-    @Column(columnDefinition = "jsonb")
-    private String features;
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode features;
+
+    @Column(nullable = false)
+    private int score;
 }
