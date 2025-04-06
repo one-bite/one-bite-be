@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/oauth/refresh",
             "/",
             "/test",
+            // 임시 전체 허용.
             "/problem/**"
     };
 
