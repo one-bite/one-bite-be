@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.entity;
 
-import code.rice.bowl.spaghetti.config.JsonNodeConverter;
+import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;

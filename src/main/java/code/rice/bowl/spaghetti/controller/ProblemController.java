@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/problem")
 @RequiredArgsConstructor
 public class ProblemController {
