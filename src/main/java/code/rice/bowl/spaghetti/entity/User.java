@@ -53,4 +53,9 @@ public class User {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @PreUpdate
+    protected void onUpdate() {
+        // TODO: 문제 풀 때 마다 사용자 Level 값을 갱신 함.
+    }
 }
