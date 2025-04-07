@@ -2,6 +2,8 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.response.SolveResponse;
 import code.rice.bowl.spaghetti.entity.*;
+import code.rice.bowl.spaghetti.exception.ProblemNotFoundException;
+import code.rice.bowl.spaghetti.exception.UserNotFoundException;
 import code.rice.bowl.spaghetti.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,12 @@ public class GradingService {
 
     public SolveResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Problem problem = problemRepository.findById(problemId)
-                .orElseThrow(() -> new RuntimeException("문제를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("cannot find a specific user"));
 
-        boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new ProblemNotFoundException("cannot find a problem"));
+
+    boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
         int score = isCorrect ? problem.getScore() : 0;
 
         if (isCorrect) {
