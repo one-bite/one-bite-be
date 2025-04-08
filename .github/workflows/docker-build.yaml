@@ -47,6 +47,6 @@ jobs:
 
     call-update-k8s:
         needs: build-and-push
-        uses: ./.github/workflows/update-k8s-pod.yaml
+        uses: ./.github/workflows/kubeconfig.yaml
         with:
             branch: ${{ needs.build-and-push.outputs.branch }}
