@@ -42,3 +42,7 @@ jobs:
                   push: true
                   tags: |
                       ${{ env.TAGS }}
+            - name: Call update-k8s-pod workflow
+              uses: ./.github/workflows/update-k8s-pod.yaml
+              with:
+                  branch: ${{ github.ref_name }}
