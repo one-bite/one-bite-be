@@ -113,6 +113,9 @@ public class AuthService {
                 .orElseGet(() -> {
                     User newUser = User.builder()
                             .email(email)
+                            .username(email.split("@")[0])
+                            .points(0)
+                            .rating(0)
                             .isNew(true)
                             .build();
 
