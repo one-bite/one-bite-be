@@ -22,7 +22,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    // 로그인 가능한 도메인 모음.
+    // 로그인 아닌 상태에서 접근 가능한 도메인.
     private static final String[] LOGIN_ONCE = {
             "/oauth/google",
             "/oauth/naver"
@@ -38,7 +38,10 @@ public class SecurityConfig {
             "/webjars/**",
             // 실제 무조건 허용하는 도메인
             "/oauth/refresh",
-            "/test"
+            "/",
+            "/test",
+            // 임시 전체 허용.
+            "/problem/**"
     };
 
     @Bean
