@@ -50,3 +50,7 @@ jobs:
         uses: ./.github/workflows/kubeconfig.yaml
         with:
             branch: ${{ needs.build-and-push.outputs.branch }}
+        secrets:
+            K8S_CA: ${{ secrets.K8S_CA }}
+            K8S_SERVER: ${{ secrets.K8S_SERVER }}
+            K8S_TOKEN: ${{ secrets.K8S_TOKEN }}
