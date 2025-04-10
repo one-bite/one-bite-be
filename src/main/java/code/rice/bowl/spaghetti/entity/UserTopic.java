@@ -6,11 +6,11 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "user_interests")
-@IdClass(UserInterestId.class)
+@IdClass(UserTopicId.class)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInterest {
+public class UserTopic {
 
     @Id
     @ManyToOne
