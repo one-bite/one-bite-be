@@ -2,19 +2,14 @@ package code.rice.bowl.spaghetti.controller;
 
 
 import code.rice.bowl.spaghetti.dto.request.CreateProblemRequest;
-import code.rice.bowl.spaghetti.service.ProblemService;
-import io.swagger.v3.oas.annotations.Operation;
 import code.rice.bowl.spaghetti.dto.request.SolveRequest;
 import code.rice.bowl.spaghetti.dto.response.SolveResponse;
 import code.rice.bowl.spaghetti.service.GradingService;
+import code.rice.bowl.spaghetti.service.ProblemService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController

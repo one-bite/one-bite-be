@@ -1,7 +1,9 @@
 package code.rice.bowl.spaghetti;
 
-import code.rice.bowl.spaghetti.entity.*;
-import code.rice.bowl.spaghetti.repository.*;
+import code.rice.bowl.spaghetti.entity.Problem;
+import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.repository.ProblemRepository;
+import code.rice.bowl.spaghetti.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

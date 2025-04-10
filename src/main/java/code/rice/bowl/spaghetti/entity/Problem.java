@@ -3,7 +3,10 @@ package code.rice.bowl.spaghetti.entity;
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
