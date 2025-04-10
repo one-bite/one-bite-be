@@ -51,7 +51,7 @@ public class LevelsController {
     @GetMapping("")
     @Operation(summary = "전체 level id, name 만 조회 함.")
     ResponseEntity<?> selectAll() {
-        List<LevelSimpleResponse> result = levelRepository.findSimpleAll();
+        List<LevelSimpleResponse> result = levelService.selectAllSimple();
 
         return ResponseEntity.ok(result);
     }

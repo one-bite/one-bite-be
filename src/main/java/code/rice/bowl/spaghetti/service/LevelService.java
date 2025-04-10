@@ -1,6 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.LevelDto;
+import code.rice.bowl.spaghetti.dto.response.LevelResponse;
+import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Level;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.LevelMapper;
@@ -8,6 +10,8 @@ import code.rice.bowl.spaghetti.repository.LevelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +40,7 @@ public class LevelService {
 
         // 3. db에 데이터 저장.
         try {
-            levelRepository.save(LevelMapper.toEntity(levelDto));
+            levelRepository.save(LevelMapper.dtoToEntity(levelDto));
         } catch (DataIntegrityViolationException e) {
             throw new InvalidRequestException("level : 이릉이 중복 됨.");
         } catch (Exception e) {
@@ -51,7 +55,7 @@ public class LevelService {
      * @param levelDto     수정 정보.
      */
     public void update(Long id, LevelDto levelDto) {
-        Level oldLevel = select(id);
+        Level oldLevel = selectById(id);
 
         oldLevel.setName(levelDto.getName());
         oldLevel.setMinRating(levelDto.getMinRating());
@@ -70,11 +74,32 @@ public class LevelService {
     }
 
     /**
-     * level 데이터 조회.
+     * 모든 level 객체 조회
+     *
+     * @return Level 객체에서 name, id 만 추출하여 전달.
+     */
+    public List<LevelSimpleResponse> selectAllSimple() {
+        return levelRepository.findSimpleAll();
+    }
+
+    /**
+     * LevelResponse 객체 조회
      *
      * @param id    조회할 level id
+     * @return      조회한 level response
      */
-    public Level select(Long id) {
+    public LevelResponse select(Long id) {
+        return LevelMapper.dtoToLevelResponse(selectById(id));
+    }
+
+    /**
+     * Level 객체 조회
+     *
+     * @param id    조회할 level id
+     * @return      조회한 Level 객체
+     * @throws InvalidRequestException 유효하지 않는 level id 인 경우
+     */
+    private Level selectById(Long id) {
         return levelRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("level: " + id + " is not exists."));
     }

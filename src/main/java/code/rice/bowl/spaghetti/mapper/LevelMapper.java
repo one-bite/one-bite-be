@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.mapper;
 
 import code.rice.bowl.spaghetti.dto.LevelDto;
+import code.rice.bowl.spaghetti.dto.response.LevelResponse;
 import code.rice.bowl.spaghetti.entity.Level;
 
 
@@ -15,11 +16,20 @@ public class LevelMapper {
                 .build();
     }
 
-    public static Level toEntity(LevelDto dto) {
+    public static Level dtoToEntity(LevelDto dto) {
         return Level.builder()
                 .name(dto.getName())
                 .minRating(dto.getMinRating())
                 .maxRating(dto.getMaxRating())
+                .build();
+    }
+
+    public static LevelResponse dtoToLevelResponse(Level level) {
+        return LevelResponse.builder()
+                .id(level.getLevelId())
+                .name(level.getName())
+                .minRating(level.getMinRating())
+                .maxRating(level.getMaxRating())
                 .build();
     }
 }
