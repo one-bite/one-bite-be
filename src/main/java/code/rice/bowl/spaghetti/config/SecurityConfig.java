@@ -42,7 +42,8 @@ public class SecurityConfig {
             "/test",
             // 임시 전체 허용.
             "/problem/**",
-            "/db/**"
+            "/db/**",
+            "/submit/**"
     };
 
     @Bean
