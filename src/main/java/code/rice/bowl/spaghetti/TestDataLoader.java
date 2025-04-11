@@ -47,7 +47,7 @@ public class TestDataLoader implements CommandLineRunner {
                     .answer("2")
                     .score(100)
                     .questionType(Problem.QuestionType.multiple_choice)
-                    .difficulty(Problem.DifficultyLevel.초급)
+                    .difficulty(Problem.DifficultyLevel.EASY)
                     .build());
 
         }

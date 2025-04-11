@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInterestId implements Serializable {
+public class UserTopicId implements Serializable {
     private Long user;
     private Long topic;
 }

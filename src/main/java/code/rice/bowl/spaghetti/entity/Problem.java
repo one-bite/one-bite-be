@@ -17,8 +17,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Problem {
 
+    @Getter
     public enum DifficultyLevel {
-        초급, 중급, 고급
+        EASY("초급"),
+        MEDIUM("중급"),
+        HARD("고급");
+
+        private final String koreanLabel;
+
+        DifficultyLevel(String koreanLabel) {
+            this.koreanLabel = koreanLabel;
+        }
+
     }
 
     public enum QuestionType {
