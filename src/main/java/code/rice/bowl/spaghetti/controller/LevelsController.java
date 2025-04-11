@@ -3,7 +3,6 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.LevelDto;
 import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
-import code.rice.bowl.spaghetti.repository.LevelRepository;
 import code.rice.bowl.spaghetti.service.LevelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +19,6 @@ import java.util.List;
 public class LevelsController {
 
    private final LevelService levelService;
-   private final LevelRepository levelRepository;
 
     // 레벨 추가
     @PostMapping("")

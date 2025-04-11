@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "users")
 @Builder
@@ -21,11 +22,11 @@ public class User {
     private String email;
 
     // 초기에는 이메일에서 이메일 ID로 설정.
+    @Column(nullable = false, unique = true)
     private String username;
 
     private int rating;
 
-    @Setter
     private int points;
 
     // 브론즈, 실버 같은 등급.

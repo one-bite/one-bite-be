@@ -7,6 +7,7 @@ import code.rice.bowl.spaghetti.mapper.TopicMapper;
 import code.rice.bowl.spaghetti.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ public class TopicService {
         return TopicMapper.toDto(topicRepository.save(topic));
     }
 
+    @Transactional
     public void delete(Long id) {
         topicRepository.deleteById(id);
     }

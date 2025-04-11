@@ -2,15 +2,15 @@ package code.rice.bowl.spaghetti.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ProblemNotFoundException extends BaseExceptionIF {
+public class NotFoundException extends BaseExceptionIF {
 
-    public ProblemNotFoundException(String message) {
+    public NotFoundException(String message) {
         super(message);
     }
 
     @Override
     public String getError() {
-        return "Problem not found";
+        return "not found";
     }
 
     @Override

@@ -4,7 +4,7 @@ import code.rice.bowl.spaghetti.dto.response.SolveResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.entity.UserProblemHistory;
-import code.rice.bowl.spaghetti.exception.ProblemNotFoundException;
+import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.exception.UserNotFoundException;
 import code.rice.bowl.spaghetti.repository.ProblemRepository;
 import code.rice.bowl.spaghetti.repository.UserProblemHistoryRepository;
@@ -25,7 +25,7 @@ public class GradingService {
                 .orElseThrow(() -> new UserNotFoundException("cannot find a specific user"));
 
         Problem problem = problemRepository.findById(problemId)
-                .orElseThrow(() -> new ProblemNotFoundException("cannot find a problem"));
+                .orElseThrow(() -> new NotFoundException("cannot find a problem"));
 
     boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
         int score = isCorrect ? problem.getScore() : 0;
