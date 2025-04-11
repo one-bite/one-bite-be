@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.TopicDto;
 import code.rice.bowl.spaghetti.dto.response.TopicResponse;
 import code.rice.bowl.spaghetti.service.TopicService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/db/topics")
 @RequiredArgsConstructor
+@Tag(name = "CRUD: Topic (주제)")
 public class TopicController {
 
     private final TopicService topicService;

@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.BadgeDto;
 import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
 import code.rice.bowl.spaghetti.service.BadgeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/db/badges")
 @RequiredArgsConstructor
+@Tag(name = "CRUD: Badge (뱃지)")
 public class BadgeController {
 
     private final BadgeService badgeService;

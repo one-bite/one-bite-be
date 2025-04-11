@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("db/levels")
-@Tag(name = "CRUD levels table / Resp. 안학룡")
+@Tag(name = "CRUD: Levels (레벨)")
 public class LevelsController {
 
    private final LevelService levelService;
