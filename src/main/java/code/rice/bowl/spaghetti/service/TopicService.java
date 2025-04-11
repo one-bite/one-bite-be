@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.request.TopicRequest;
+import code.rice.bowl.spaghetti.dto.TopicDto;
 import code.rice.bowl.spaghetti.dto.response.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.mapper.TopicMapper;
@@ -17,7 +17,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-    public TopicResponse create(TopicRequest dto) {
+    public TopicResponse create(TopicDto dto) {
         Topic topic = TopicMapper.toEntity(dto);
         return TopicMapper.toDto(topicRepository.save(topic));
     }
@@ -34,7 +34,7 @@ public class TopicService {
         return TopicMapper.toDto(topic);
     }
 
-    public TopicResponse update(Long id, TopicRequest dto) {
+    public TopicResponse update(Long id, TopicDto dto) {
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Topic not found"));
         TopicMapper.updateEntity(topic, dto);

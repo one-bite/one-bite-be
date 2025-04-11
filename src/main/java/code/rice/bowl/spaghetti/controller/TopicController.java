@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.request.TopicRequest;
+import code.rice.bowl.spaghetti.dto.TopicDto;
 import code.rice.bowl.spaghetti.dto.response.TopicResponse;
 import code.rice.bowl.spaghetti.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class TopicController {
     private final TopicService topicService;
 
     @PostMapping
-    public ResponseEntity<TopicResponse> create(@RequestBody TopicRequest dto) {
+    public ResponseEntity<TopicResponse> create(@RequestBody TopicDto dto) {
         return ResponseEntity.ok(topicService.create(dto));
     }
 
@@ -32,7 +32,7 @@ public class TopicController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TopicResponse> update(@PathVariable Long id, @RequestBody TopicRequest dto) {
+    public ResponseEntity<TopicResponse> update(@PathVariable Long id, @RequestBody TopicDto dto) {
         return ResponseEntity.ok(topicService.update(id, dto));
     }
 

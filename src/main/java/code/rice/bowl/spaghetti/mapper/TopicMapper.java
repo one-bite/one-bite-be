@@ -1,12 +1,12 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.request.TopicRequest;
+import code.rice.bowl.spaghetti.dto.TopicDto;
 import code.rice.bowl.spaghetti.dto.response.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
 
 public class TopicMapper {
 
-    public static Topic toEntity(TopicRequest dto) {
+    public static Topic toEntity(TopicDto dto) {
         return Topic.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -23,7 +23,7 @@ public class TopicMapper {
                 .build();
     }
 
-    public static void updateEntity(Topic topic, TopicRequest dto) {
+    public static void updateEntity(Topic topic, TopicDto dto) {
         topic.setName(dto.getName());
         topic.setDescription(dto.getDescription());
         topic.setTotal(dto.getTotal());
