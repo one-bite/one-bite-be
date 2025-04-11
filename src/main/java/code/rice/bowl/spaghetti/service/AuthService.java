@@ -1,6 +1,5 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.config.JwtAuthenticationFilter;
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
 import code.rice.bowl.spaghetti.dto.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;

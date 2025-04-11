@@ -1,16 +1,19 @@
 package code.rice.bowl.spaghetti.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "user_interests")
-@IdClass(UserInterestId.class)
+@IdClass(UserTopicId.class)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInterest {
+public class UserTopic {
 
     @Id
     @ManyToOne

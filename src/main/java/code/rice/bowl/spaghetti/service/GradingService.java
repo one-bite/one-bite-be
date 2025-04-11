@@ -1,10 +1,14 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.response.SolveResponse;
-import code.rice.bowl.spaghetti.entity.*;
+import code.rice.bowl.spaghetti.entity.Problem;
+import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.entity.UserProblemHistory;
 import code.rice.bowl.spaghetti.exception.ProblemNotFoundException;
 import code.rice.bowl.spaghetti.exception.UserNotFoundException;
-import code.rice.bowl.spaghetti.repository.*;
+import code.rice.bowl.spaghetti.repository.ProblemRepository;
+import code.rice.bowl.spaghetti.repository.UserProblemHistoryRepository;
+import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

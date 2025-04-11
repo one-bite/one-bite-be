@@ -1,6 +1,9 @@
 package code.rice.bowl.spaghetti.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -8,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInterestId implements Serializable {
+public class UserTopicId implements Serializable {
     private Long user;
     private Long topic;
 }
