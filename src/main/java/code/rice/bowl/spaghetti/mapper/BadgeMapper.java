@@ -24,11 +24,4 @@ public class BadgeMapper {
                 .imageUrl(badge.getImageUrl())
                 .build();
     }
-
-    public static void updateEntity(Badge badge, BadgeDto dto) {
-        badge.setName(dto.getName());
-        badge.setDescription(dto.getDescription());
-        badge.setCondition(dto.getCondition());
-        badge.setImageUrl(dto.getImageUrl());
-    }
 }

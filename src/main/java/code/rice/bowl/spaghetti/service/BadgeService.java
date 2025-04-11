@@ -37,7 +37,12 @@ public class BadgeService {
     public BadgeResponse update(Long id, BadgeDto dto) {
         Badge badge = badgeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Badge not found"));
-        BadgeMapper.updateEntity(badge, dto);
+
+        badge.setName(dto.getName());
+        badge.setDescription(dto.getDescription());
+        badge.setCondition(dto.getCondition());
+        badge.setImageUrl(dto.getImageUrl());
+
         return BadgeMapper.toDto(badgeRepository.save(badge));
     }
 
