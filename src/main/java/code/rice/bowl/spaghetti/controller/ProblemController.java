@@ -20,7 +20,7 @@ public class ProblemController {
     private final ProblemService problemService;
     private final GradingService gradingService;
 
-    @PostMapping("/{problemId}/submit")
+    @PostMapping("/{problemId}")
     public ResponseEntity<SolveResponse> solveProblem(
             @PathVariable Long problemId,
             @RequestBody SolveRequest request
@@ -34,12 +34,11 @@ public class ProblemController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(
             summary = "문제 등록"
     )
     public ResponseEntity<?> addProblem(@RequestBody CreateProblemRequest newProblem) {
         return ResponseEntity.ok(problemService.createProblem(newProblem));
     }
-
 }
