@@ -37,7 +37,11 @@ public class TopicService {
     public TopicResponse update(Long id, TopicDto dto) {
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Topic not found"));
-        TopicMapper.updateEntity(topic, dto);
+
+        topic.setName(dto.getName());
+        topic.setDescription(dto.getDescription());
+        topic.setTotal(dto.getTotal());
+
         return TopicMapper.toDto(topicRepository.save(topic));
     }
 

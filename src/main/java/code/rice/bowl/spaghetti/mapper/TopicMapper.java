@@ -24,8 +24,6 @@ public class TopicMapper {
     }
 
     public static void updateEntity(Topic topic, TopicDto dto) {
-        topic.setName(dto.getName());
-        topic.setDescription(dto.getDescription());
-        topic.setTotal(dto.getTotal());
+
     }
 }
