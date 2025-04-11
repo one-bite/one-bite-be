@@ -17,6 +17,7 @@ public class SubmitController {
 
     private final GradingService gradingService;
 
+    // 채점
     @PostMapping("/{problemId}")
     @Operation(summary = "사용자가 제출한 문제 채점 및 결과 반환")
     public ResponseEntity<SubmitResponse> solveProblem(

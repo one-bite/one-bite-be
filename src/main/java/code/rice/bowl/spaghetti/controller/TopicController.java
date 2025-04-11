@@ -18,26 +18,31 @@ public class TopicController {
 
     private final TopicService topicService;
 
+    // 추가
     @PostMapping
     public ResponseEntity<TopicResponse> create(@RequestBody TopicDto dto) {
         return ResponseEntity.ok(topicService.create(dto));
     }
 
+    // 조회
     @GetMapping
     public ResponseEntity<List<TopicResponse>> findAll() {
         return ResponseEntity.ok(topicService.findAll());
     }
 
+    // 조회 (단일 튜플)
     @GetMapping("/{id}")
     public ResponseEntity<TopicResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(topicService.findById(id));
     }
 
+    // 수정
     @PutMapping("/{id}")
     public ResponseEntity<TopicResponse> update(@PathVariable Long id, @RequestBody TopicDto dto) {
         return ResponseEntity.ok(topicService.update(id, dto));
     }
 
+    // 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         topicService.delete(id);
