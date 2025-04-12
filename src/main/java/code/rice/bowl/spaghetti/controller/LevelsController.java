@@ -3,7 +3,6 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.LevelDto;
 import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
-import code.rice.bowl.spaghetti.repository.LevelRepository;
 import code.rice.bowl.spaghetti.service.LevelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,11 +15,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("db/levels")
-@Tag(name = "CRUD levels table / Resp. 안학룡")
+@Tag(name = "CRUD: Levels (레벨)")
 public class LevelsController {
 
    private final LevelService levelService;
-   private final LevelRepository levelRepository;
 
     // 레벨 추가
     @PostMapping("")

@@ -15,6 +15,8 @@ public interface LevelRepository extends JpaRepository<Level, Long> {
     // 주어진 구간과 겹치는 범위가 있는지 확인.
     boolean existsByMinRatingLessThanEqualAndMaxRatingGreaterThanEqual(int max, int min);
 
+    Optional<Level> findByMinRatingLessThanEqualAndMaxRatingGreaterThan(int max, int min);
+
     // 이름 존재 여부 확인.
     boolean existsByName(String name);
 

@@ -5,11 +5,13 @@ import code.rice.bowl.spaghetti.dto.response.LevelResponse;
 import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Level;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.mapper.LevelMapper;
 import code.rice.bowl.spaghetti.repository.LevelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -69,6 +71,7 @@ public class LevelService {
      *
      * @param id    삭제할 level id
      */
+    @Transactional
     public void delete(Long id) {
         levelRepository.deleteById(id);
     }
@@ -102,5 +105,16 @@ public class LevelService {
     private Level selectById(Long id) {
         return levelRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("level: " + id + " is not exists."));
+    }
+
+    /**
+     * 사용자의 rating 기준에 맞는 level 조회.
+     *
+     * @param rating    현재 사용자 rating
+     * @return          현재 사용자 level.
+     */
+    public Level getUserLevel(int rating) {
+        return levelRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThan(0, 0)
+                .orElseThrow(() -> new NotFoundException("Level : not found"));
     }
 }

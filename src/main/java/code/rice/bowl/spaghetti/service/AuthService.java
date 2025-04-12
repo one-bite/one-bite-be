@@ -6,7 +6,7 @@ import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotImplementedException;
-import code.rice.bowl.spaghetti.repository.UserInfoRepository;
+import code.rice.bowl.spaghetti.repository.UserRepository;
 import code.rice.bowl.spaghetti.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final UserRepository userInfoRepository;
+
     private final GoogleLoginService googleLoginService;
-    private final UserInfoRepository userInfoRepository;
     private final RedisService redisService;
+    private final LevelService levelService;
 
     private final JwtProvider jwtProvider;
 
@@ -115,6 +117,7 @@ public class AuthService {
                             .username(email.split("@")[0])
                             .points(0)
                             .rating(0)
+                            .level(levelService.getUserLevel(0))
                             .isNew(true)
                             .build();
 

@@ -22,8 +22,4 @@ public class TopicMapper {
                 .total(topic.getTotal())
                 .build();
     }
-
-    public static void updateEntity(Topic topic, TopicDto dto) {
-
-    }
 }
