@@ -1,32 +1,65 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.request.CreateProblemRequest;
+import code.rice.bowl.spaghetti.dto.ProblemDto;
+import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
+import code.rice.bowl.spaghetti.entity.Topic;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import code.rice.bowl.spaghetti.mapper.ProblemMapper;
 import code.rice.bowl.spaghetti.repository.ProblemRepository;
+import code.rice.bowl.spaghetti.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final TopicRepository topicRepository;
 
-    public boolean createProblem(CreateProblemRequest request) {
+    public ProblemResponse create(ProblemDto dto) {
+        Topic topic = topicRepository.findById(dto.getTopicId())
+                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
+        Problem problem = ProblemMapper.toEntity(dto, topic);
+        return ProblemMapper.toDto(problemRepository.save(problem));
+    }
 
-        try {
-            problemRepository.save(Problem.builder()
-                    .title(request.getTitle())
-                    .description(request.getDescription())
-                    .answer(request.getAnswer())
-                    .score(request.getScore())
-                    .questionType(Problem.QuestionType.valueOf(request.getQuestionType()))
-                    .difficulty(Problem.DifficultyLevel.valueOf(request.getDifficulty()))
-                    .build());
+    public List<ProblemResponse> findAll() {
+        return problemRepository.findAll().stream()
+                .map(ProblemMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public ProblemResponse findById(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
+        return ProblemMapper.toDto(problem);
+    }
+
+    public ProblemResponse update(Long id, ProblemDto dto) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
+        Topic topic = topicRepository.findById(dto.getTopicId())
+                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
+
+        problem.setTopic(topic);
+        problem.setTitle(dto.getTitle());
+        problem.setDescription(dto.getDescription());
+        problem.setQuestionType(dto.getQuestionType());
+        problem.setDifficulty(dto.getDifficulty());
+        problem.setHint(dto.getHint());
+        problem.setAnswer(dto.getAnswer());
+        problem.setFeatures(dto.getFeatures());
+        problem.setScore(dto.getScore());
+
+        return ProblemMapper.toDto(problemRepository.save(problem));
+    }
+
+    public void delete(Long id) {
+        problemRepository.deleteById(id);
     }
 }

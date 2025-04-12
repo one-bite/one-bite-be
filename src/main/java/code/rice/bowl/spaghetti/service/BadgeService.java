@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.service;
 import code.rice.bowl.spaghetti.dto.BadgeDto;
 import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,13 @@ public class BadgeService {
 
     public BadgeResponse findById(Long id) {
         Badge badge = badgeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Badge not found"));
+                .orElseThrow(() -> new InvalidRequestException("Badge not found"));
         return BadgeMapper.toDto(badge);
     }
 
     public BadgeResponse update(Long id, BadgeDto dto) {
         Badge badge = badgeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Badge not found"));
+                .orElseThrow(() -> new InvalidRequestException("Badge not found"));
 
         badge.setName(dto.getName());
         badge.setDescription(dto.getDescription());
