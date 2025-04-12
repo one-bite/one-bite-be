@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.response.SolveResponse;
+import code.rice.bowl.spaghetti.dto.response.SubmitResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.entity.UserProblemHistory;
@@ -20,7 +20,7 @@ public class GradingService {
     private final ProblemRepository problemRepository;
     private final UserProblemHistoryRepository historyRepository;
 
-    public SolveResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
+    public SubmitResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("cannot find a specific user"));
 
@@ -44,7 +44,7 @@ public class GradingService {
                 .build();
         historyRepository.save(history);
 
-        return new SolveResponse(isCorrect, score);
+        return new SubmitResponse(isCorrect, score);
     }
 
     //Trimming

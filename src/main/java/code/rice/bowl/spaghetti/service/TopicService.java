@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.service;
 import code.rice.bowl.spaghetti.dto.TopicDto;
 import code.rice.bowl.spaghetti.dto.response.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.TopicMapper;
 import code.rice.bowl.spaghetti.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,13 @@ public class TopicService {
 
     public TopicResponse findById(Long id) {
         Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Topic not found"));
+                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
         return TopicMapper.toDto(topic);
     }
 
     public TopicResponse update(Long id, TopicDto dto) {
         Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Topic not found"));
+                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
 
         topic.setName(dto.getName());
         topic.setDescription(dto.getDescription());
