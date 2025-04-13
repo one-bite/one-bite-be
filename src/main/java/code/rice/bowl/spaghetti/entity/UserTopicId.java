@@ -1,16 +1,14 @@
 package code.rice.bowl.spaghetti.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class UserTopicId implements Serializable {
     private Long user;
     private Long topic;
