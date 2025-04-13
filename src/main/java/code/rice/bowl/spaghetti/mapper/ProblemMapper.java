@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.mapper;
 
 import code.rice.bowl.spaghetti.dto.ProblemDto;
 import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.response.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Topic;
 
@@ -31,6 +32,14 @@ public class ProblemMapper {
                 .hint(problem.getHint())
                 .answer(problem.getAnswer())
                 .features(problem.getFeatures())
+                .score(problem.getScore())
+                .build();
+    }
+
+    public static ProblemSimpleResponse toSimpleDto(Problem problem) {
+        return ProblemSimpleResponse.builder()
+                .problemId(problem.getProblemId())
+                .title(problem.getTitle())
                 .score(problem.getScore())
                 .build();
     }

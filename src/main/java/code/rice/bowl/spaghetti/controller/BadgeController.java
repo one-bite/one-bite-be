@@ -30,7 +30,7 @@ public class BadgeController {
         return ResponseEntity.ok(badgeService.findAll());
     }
 
-    // 조회 (단일 튜플)
+    // 조회 (단일 개체)
     @GetMapping("/{id}")
     public ResponseEntity<BadgeResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(badgeService.findById(id));
