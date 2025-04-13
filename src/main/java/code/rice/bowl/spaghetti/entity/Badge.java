@@ -25,6 +25,7 @@ public class Badge {
 
     private String description;
 
+    // 뱃지 획득 조건
     private String condition;
 
     private String imageUrl;

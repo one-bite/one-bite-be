@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
-import code.rice.bowl.spaghetti.dto.LoginProvider;
+import code.rice.bowl.spaghetti.utils.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;

@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto;
+package code.rice.bowl.spaghetti.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

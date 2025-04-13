@@ -43,7 +43,6 @@ public class UserController {
 
     // 회원 탈퇴
     @DeleteMapping("")
-    @Transactional
     public ResponseEntity<?> delete(@AuthenticationPrincipal(expression = "username") String email) {
         userService.delete(email);
 
