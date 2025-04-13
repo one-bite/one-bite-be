@@ -2,11 +2,11 @@ package code.rice.bowl.spaghetti.controller;
 
 import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
+import code.rice.bowl.spaghetti.service.UserBadgeService;
 import code.rice.bowl.spaghetti.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -18,11 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserBadgeService userBadgeService;
 
     // 현재 로그인한 사용자가 자신의 정보를 요청할 때
     @GetMapping("")
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal(expression = "username") String email) {
         return ResponseEntity.ok(userService.getUserAllInfo(email));
+    }
+
+    // 현재 로그인한 사용자의 획득한 모든 뱃지의 정보 요청
+    @GetMapping("/badges")
+    public ResponseEntity<?> getBadges(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(userBadgeService.getUserBadges(email));
     }
 
     // 그 외 일반적으로 타인의 정보를 요청할 때 -> 나중에 필요할 듯.

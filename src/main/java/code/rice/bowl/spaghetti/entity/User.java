@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,13 +40,12 @@ public class User {
 
     private LocalDateTime lastLogin;
 
-    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isNew;
 
-    public boolean isNew() {
-        return isNew;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserBadge> userBadges = new ArrayList<>();
 
     public void addPoints(int additionalPoints) {
         this.points += additionalPoints;

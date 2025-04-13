@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -29,4 +32,8 @@ public class Badge {
     private String condition;
 
     private String imageUrl;
+
+    @OneToMany(mappedBy = "badge")
+    @Builder.Default
+    private List<UserBadge> userBadges = new ArrayList<>();
 }

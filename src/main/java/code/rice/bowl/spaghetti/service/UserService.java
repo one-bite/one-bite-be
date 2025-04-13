@@ -1,14 +1,23 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
+import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
 import code.rice.bowl.spaghetti.dto.response.CurrentUserResponse;
+import code.rice.bowl.spaghetti.entity.Badge;
 import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.entity.UserBadge;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.mapper.UserMapper;
+import code.rice.bowl.spaghetti.repository.UserBadgeRepository;
 import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +77,7 @@ public class UserService {
      * @param email     조회할 사용자 객체.
      * @return          조회된 상요자 객체 정보.
      */
-    private User getUser(String email) {
+    public User getUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new InvalidRequestException("user : check your login info"));
     }
