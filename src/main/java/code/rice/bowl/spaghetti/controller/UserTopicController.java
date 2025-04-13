@@ -23,6 +23,8 @@ public class UserTopicController {
     public ResponseEntity<List<UserTopicResponse>> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(userTopicService.findByUserId(userId));
     }
+
+    // 필요 없을수도? 또는 단순히 사용자 수만 count 해서 조회해야 할 수도 있을듯.
     @GetMapping("/topic/{topicId}")
     @Operation(summary = "토픽 id로 사용자 조회")
     public ResponseEntity<List<UserTopicResponse>> getByTopicId(@PathVariable Long topicId) {
