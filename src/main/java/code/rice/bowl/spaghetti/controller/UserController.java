@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.UserBadgeService;
+import code.rice.bowl.spaghetti.service.UserProgressService;
 import code.rice.bowl.spaghetti.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserBadgeService userBadgeService;
+    private final UserProgressService userProgressService;
 
     // 현재 로그인한 사용자가 자신의 정보를 요청할 때
     @GetMapping("")
@@ -30,6 +32,12 @@ public class UserController {
     @GetMapping("/badges")
     public ResponseEntity<?> getBadges(@AuthenticationPrincipal(expression = "username") String email) {
         return ResponseEntity.ok(userBadgeService.getUserBadges(email));
+    }
+
+    // 현재 로그인한 사용자의 각 토픽의 진행도 정보 요청
+    @GetMapping("/topic-progress")
+    public ResponseEntity<?> getTopicProgress(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(userProgressService.getAllProgress(email));
     }
 
     // 그 외 일반적으로 타인의 정보를 요청할 때 -> 나중에 필요할 듯.

@@ -31,14 +31,12 @@ public class TopicService {
     }
 
     public TopicResponse findById(Long id) {
-        Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
+        Topic topic = getTopic(id);
         return TopicMapper.toDto(topic);
     }
 
     public TopicResponse update(Long id, TopicDto dto) {
-        Topic topic = topicRepository.findById(id)
-                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
+        Topic topic = getTopic(id);
 
         topic.setName(dto.getName());
         topic.setDescription(dto.getDescription());
@@ -50,5 +48,10 @@ public class TopicService {
     @Transactional
     public void delete(Long id) {
         topicRepository.deleteById(id);
+    }
+
+    public Topic getTopic(Long id) {
+        return topicRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
     }
 }

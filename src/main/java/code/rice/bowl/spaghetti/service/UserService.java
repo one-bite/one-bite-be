@@ -5,6 +5,7 @@ import code.rice.bowl.spaghetti.dto.response.CurrentUserResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.mapper.UserMapper;
 import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -104,6 +105,11 @@ public class UserService {
      */
     public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidRequestException("user : check your login info"));
+                .orElseThrow(() -> new NotFoundException("user : user not found"));
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("user : user not found"));
     }
 }
