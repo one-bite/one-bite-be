@@ -1,50 +1,55 @@
 package code.rice.bowl.spaghetti.controller;
 
-
-import code.rice.bowl.spaghetti.dto.request.CreateProblemRequest;
+import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
-import code.rice.bowl.spaghetti.dto.request.SolveRequest;
-import code.rice.bowl.spaghetti.dto.response.SolveResponse;
-import code.rice.bowl.spaghetti.service.GradingService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
-@RequestMapping("/problem")
+@RequestMapping("/db/problems")
 @RequiredArgsConstructor
+@Tag(name = "CRUD: Problem (문제)")
 public class ProblemController {
 
     private final ProblemService problemService;
-    private final GradingService gradingService;
 
-    @PostMapping("/{problemId}/submit")
-    public ResponseEntity<SolveResponse> solveProblem(
-            @PathVariable Long problemId,
-            @RequestBody SolveRequest request
-    ) {
-        SolveResponse result = gradingService.grade(
-                problemId,
-                request.getUserId(),
-                request.getAnswer(),
-                request.getSolveTime()
-        );
-        return ResponseEntity.ok(result);
+    // 추가
+    @PostMapping
+    @Operation(summary = "문제 추가")
+    public ResponseEntity<ProblemResponse> create(@RequestBody ProblemDto dto) {
+        return ResponseEntity.ok(problemService.create(dto));
     }
 
-    @PostMapping("/")
-    @Operation(
-            summary = "문제 등록"
-    )
-    public ResponseEntity<?> addProblem(@RequestBody CreateProblemRequest newProblem) {
-        return ResponseEntity.ok(problemService.createProblem(newProblem));
+    // 조회
+    @GetMapping
+    @Operation(summary = "전체 문제 id, 제목, 점수만 조회")
+    public ResponseEntity<List<ProblemSimpleResponse>> findAllSimple() {
+        return ResponseEntity.ok(problemService.findAll());
     }
 
+    // 조회 (단일 개체)
+    @GetMapping("/{id}")
+    public ResponseEntity<ProblemResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(problemService.findById(id));
+    }
+
+    // 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<ProblemResponse> update(@PathVariable Long id, @RequestBody ProblemDto dto) {
+        return ResponseEntity.ok(problemService.update(id, dto));
+    }
+
+    // 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        problemService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

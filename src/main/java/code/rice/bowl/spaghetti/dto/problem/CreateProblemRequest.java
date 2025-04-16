@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto.request;
+package code.rice.bowl.spaghetti.dto.problem;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotNull;

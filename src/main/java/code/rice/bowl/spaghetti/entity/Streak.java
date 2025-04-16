@@ -5,9 +5,12 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "streaks")
 @Builder
@@ -19,12 +22,18 @@ public class Streak {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long streakId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(columnDefinition = "jsonb")
-    private List<LocalDate> activeDates;
+    private HashSet<String> activeDates;
+
+    public void addActiveDate(int year, int month , int day) {
+        activeDates.add(year + "-" + month + "-" + day);
+
+        updatedAt = LocalDateTime.now();
+    }
 
     private LocalDateTime updatedAt;
 

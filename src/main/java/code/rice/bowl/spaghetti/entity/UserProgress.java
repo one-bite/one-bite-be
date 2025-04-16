@@ -11,17 +11,28 @@ import lombok.*;
 @NoArgsConstructor
 public class UserProgress {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long progressId;
+    @EmbeddedId
+    @Builder.Default
+    private UserProgressId progressId = new UserProgressId();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void setUser(User user) {
+        this.user = user;
+        this.progressId.setUserKey(user.getUserId());
+    }
+
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+        this.progressId.setTopicKey(topic.getTopicId());
+    }
+
+    @Setter
     private int completedProblems;
 }

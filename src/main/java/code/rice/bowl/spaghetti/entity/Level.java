@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "levels")
 @Builder
@@ -15,7 +16,7 @@ public class Level {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long levelId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)

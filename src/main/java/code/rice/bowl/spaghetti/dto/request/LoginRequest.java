@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.dto.request;
 
-import code.rice.bowl.spaghetti.dto.LoginProvider;
+import code.rice.bowl.spaghetti.utils.LoginProvider;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

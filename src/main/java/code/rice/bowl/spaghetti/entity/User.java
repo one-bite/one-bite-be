@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "users")
 @Builder
@@ -21,11 +24,11 @@ public class User {
     private String email;
 
     // 초기에는 이메일에서 이메일 ID로 설정.
+    @Column(nullable = false, unique = true)
     private String username;
 
     private int rating;
 
-    @Setter
     private int points;
 
     // 브론즈, 실버 같은 등급.
@@ -37,16 +40,39 @@ public class User {
 
     private LocalDateTime lastLogin;
 
-    @Getter(AccessLevel.NONE)
     @Column(nullable = false)
     private boolean isNew;
 
-    public boolean isNew() {
-        return isNew;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserBadge> userBadges = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Setter(AccessLevel.NONE)
+    private Streak streak;
+
+    public void setStreak(Streak steak) {
+        this.streak = steak;
+
+        if (this.streak.getUser() != this) {
+            this.streak.setUser(this);
+        }
     }
 
+    /**
+     * 문제 해결 성공시 호출 됨.
+     */
     public void addPoints(int additionalPoints) {
+        // 1. 포인트 증가
         this.points += additionalPoints;
+
+        // 2. 스트릭 업데이트
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+
+        this.streak.addActiveDate(year, month, day);
     }
 
     @PrePersist

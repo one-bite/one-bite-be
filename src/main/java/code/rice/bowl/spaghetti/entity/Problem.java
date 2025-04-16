@@ -3,10 +3,15 @@ package code.rice.bowl.spaghetti.entity;
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
+@Setter
 @Entity
 @Table(name = "problems")
 @Builder
@@ -14,8 +19,18 @@ import lombok.*;
 @NoArgsConstructor
 public class Problem {
 
+    @Getter
     public enum DifficultyLevel {
-        초급, 중급, 고급
+        EASY("초급"),
+        MEDIUM("중급"),
+        HARD("고급");
+
+        private final String koreanLabel;
+
+        DifficultyLevel(String koreanLabel) {
+            this.koreanLabel = koreanLabel;
+        }
+
     }
 
     public enum QuestionType {

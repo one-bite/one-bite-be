@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SolveResponse {
-    private boolean correct;
-    private int score;
+public class SimpleOkResponse {
+    private String status;
 }
