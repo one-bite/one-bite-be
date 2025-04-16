@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.response.UserProblemHistoryResponse;
+import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistoryResponse;
 import code.rice.bowl.spaghetti.entity.UserProblemHistory;
 
 public class UserProblemHistoryMapper {

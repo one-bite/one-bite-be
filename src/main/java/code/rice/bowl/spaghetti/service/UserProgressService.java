@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 
-import code.rice.bowl.spaghetti.dto.response.UserProgressResponse;
+import code.rice.bowl.spaghetti.dto.userprogress.UserProgressResponse;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.entity.UserProgress;
 import code.rice.bowl.spaghetti.entity.UserProgressId;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.response.UserTopicResponse;
+import code.rice.bowl.spaghetti.dto.usertopic.UserTopicResponse;
 import code.rice.bowl.spaghetti.entity.UserTopic;
 
 public class UserTopicMapper {

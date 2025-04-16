@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto;
+package code.rice.bowl.spaghetti.dto.problem;
 
 import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
 import code.rice.bowl.spaghetti.entity.Problem.QuestionType;

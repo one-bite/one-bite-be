@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.response.CurrentUserResponse;
-import code.rice.bowl.spaghetti.dto.response.UserSimpleResponse;
+import code.rice.bowl.spaghetti.dto.user.CurrentUserResponse;
+import code.rice.bowl.spaghetti.dto.user.UserSimpleResponse;
 import code.rice.bowl.spaghetti.entity.User;
 
 public class UserMapper {

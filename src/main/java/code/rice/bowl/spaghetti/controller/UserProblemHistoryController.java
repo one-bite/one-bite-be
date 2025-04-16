@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.response.UserProblemHistoryResponse;
-import code.rice.bowl.spaghetti.dto.response.UserProblemHistorySummaryResponse;
+import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistoryResponse;
+import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistorySummaryResponse;
 import code.rice.bowl.spaghetti.service.UserProblemHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

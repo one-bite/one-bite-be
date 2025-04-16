@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.BadgeDto;
-import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
+import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
 
 public class BadgeMapper {

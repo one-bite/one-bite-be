@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.LevelDto;
-import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.level.LevelDto;
+import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.LevelService;
 import io.swagger.v3.oas.annotations.Operation;

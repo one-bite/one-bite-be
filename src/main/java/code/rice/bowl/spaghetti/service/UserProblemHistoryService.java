@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.response.UserProblemHistoryResponse;
-import code.rice.bowl.spaghetti.dto.response.UserProblemHistorySummaryResponse;
+import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistoryResponse;
+import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistorySummaryResponse;
 import code.rice.bowl.spaghetti.entity.UserProblemHistory;
 import code.rice.bowl.spaghetti.mapper.UserProblemHistoryMapper;
 import code.rice.bowl.spaghetti.repository.UserProblemHistoryRepository;

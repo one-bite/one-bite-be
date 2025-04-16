@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
-import code.rice.bowl.spaghetti.dto.response.CurrentUserResponse;
+import code.rice.bowl.spaghetti.dto.user.CurrentUserResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;

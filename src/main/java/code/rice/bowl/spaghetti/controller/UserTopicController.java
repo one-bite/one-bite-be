@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.response.UserTopicResponse;
+import code.rice.bowl.spaghetti.dto.usertopic.UserTopicResponse;
 import code.rice.bowl.spaghetti.service.UserTopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

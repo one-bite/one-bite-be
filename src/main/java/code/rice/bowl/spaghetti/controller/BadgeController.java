@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.BadgeDto;
-import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
+import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.service.BadgeService;
 import code.rice.bowl.spaghetti.service.UserBadgeService;
 import io.swagger.v3.oas.annotations.tags.Tag;

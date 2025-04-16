@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto;
+package code.rice.bowl.spaghetti.dto.badge;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.ProblemDto;
-import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
-import code.rice.bowl.spaghetti.dto.response.ProblemSimpleResponse;
+import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;

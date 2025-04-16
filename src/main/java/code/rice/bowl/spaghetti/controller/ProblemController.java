@@ -1,8 +1,8 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.ProblemDto;
-import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
-import code.rice.bowl.spaghetti.dto.response.ProblemSimpleResponse;
+import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

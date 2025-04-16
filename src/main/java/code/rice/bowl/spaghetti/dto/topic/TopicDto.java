@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto;
+package code.rice.bowl.spaghetti.dto.topic;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

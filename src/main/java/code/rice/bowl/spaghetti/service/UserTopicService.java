@@ -1,7 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.response.UserTopicResponse;
-import code.rice.bowl.spaghetti.entity.UserTopic;
+import code.rice.bowl.spaghetti.dto.usertopic.UserTopicResponse;
 import code.rice.bowl.spaghetti.mapper.UserTopicMapper;
 import code.rice.bowl.spaghetti.repository.UserTopicRepository;
 import lombok.RequiredArgsConstructor;

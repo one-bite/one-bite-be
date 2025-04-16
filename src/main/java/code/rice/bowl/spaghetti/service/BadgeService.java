@@ -1,10 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.BadgeDto;
-import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
-import code.rice.bowl.spaghetti.dto.response.UserSimpleResponse;
+import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
-import code.rice.bowl.spaghetti.entity.UserBadge;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.repository.BadgeRepository;

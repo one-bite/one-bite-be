@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.dto.response;
+package code.rice.bowl.spaghetti.dto.level;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

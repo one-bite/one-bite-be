@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.LevelDto;
-import code.rice.bowl.spaghetti.dto.response.LevelResponse;
+import code.rice.bowl.spaghetti.dto.level.LevelDto;
+import code.rice.bowl.spaghetti.dto.level.LevelResponse;
 import code.rice.bowl.spaghetti.entity.Level;
 
 

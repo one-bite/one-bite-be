@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.response.UserProgressResponse;
+import code.rice.bowl.spaghetti.dto.userprogress.UserProgressResponse;
 import code.rice.bowl.spaghetti.entity.UserProgress;
 
 public class UserProgressMapper {

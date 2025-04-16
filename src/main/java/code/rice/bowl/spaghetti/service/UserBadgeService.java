@@ -1,15 +1,13 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
-import code.rice.bowl.spaghetti.dto.response.UserSimpleResponse;
+import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
+import code.rice.bowl.spaghetti.dto.user.UserSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.entity.UserBadge;
 import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.mapper.UserMapper;
-import code.rice.bowl.spaghetti.repository.BadgeRepository;
 import code.rice.bowl.spaghetti.repository.UserBadgeRepository;
-import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

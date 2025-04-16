@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.TopicDto;
-import code.rice.bowl.spaghetti.dto.response.TopicResponse;
+import code.rice.bowl.spaghetti.dto.topic.TopicDto;
+import code.rice.bowl.spaghetti.dto.topic.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
 
 public class TopicMapper {

@@ -1,8 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.LevelDto;
-import code.rice.bowl.spaghetti.dto.response.LevelResponse;
-import code.rice.bowl.spaghetti.dto.response.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.level.LevelDto;
+import code.rice.bowl.spaghetti.dto.level.LevelResponse;
+import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Level;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
