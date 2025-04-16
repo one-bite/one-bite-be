@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.controller;
 
 import code.rice.bowl.spaghetti.dto.ProblemDto;
 import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.response.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,11 +29,12 @@ public class ProblemController {
 
     // 조회
     @GetMapping
-    public ResponseEntity<List<ProblemResponse>> findAll() {
+    @Operation(summary = "전체 문제 id, 제목, 점수만 조회")
+    public ResponseEntity<List<ProblemSimpleResponse>> findAllSimple() {
         return ResponseEntity.ok(problemService.findAll());
     }
 
-    // 조회 (단일 튜플)
+    // 조회 (단일 개체)
     @GetMapping("/{id}")
     public ResponseEntity<ProblemResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(problemService.findById(id));

@@ -30,7 +30,7 @@ public class TopicController {
         return ResponseEntity.ok(topicService.findAll());
     }
 
-    // 조회 (단일 튜플)
+    // 조회 (단일 개체)
     @GetMapping("/{id}")
     public ResponseEntity<TopicResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(topicService.findById(id));
