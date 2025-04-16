@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.BadgeDto;
 import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
 import code.rice.bowl.spaghetti.service.BadgeService;
+import code.rice.bowl.spaghetti.service.UserBadgeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 public class BadgeController {
 
     private final BadgeService badgeService;
+    private final UserBadgeService userBadgeService;
 
     // 추가
     @PostMapping
@@ -30,10 +32,16 @@ public class BadgeController {
         return ResponseEntity.ok(badgeService.findAll());
     }
 
-    // 조회 (단일 튜플)
+    // 조회 (단일 개체)
     @GetMapping("/{id}")
     public ResponseEntity<BadgeResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(badgeService.findById(id));
+    }
+
+    // 해당 뱃지를 보유하고 있는 사용자를 조회
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<?> findBadgeOwner(@PathVariable Long id) {
+        return ResponseEntity.ok(userBadgeService.getBadgesOwner(id));
     }
 
     // 수정

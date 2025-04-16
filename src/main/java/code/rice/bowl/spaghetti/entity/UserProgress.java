@@ -1,10 +1,7 @@
 package code.rice.bowl.spaghetti.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -14,17 +11,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserProgress {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long progressId;
+    @EmbeddedId
+    @Builder.Default
+    private UserProgressId progressId = new UserProgressId();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void setUser(User user) {
+        this.user = user;
+        this.progressId.setUserId(user.getUserId());
+    }
+
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+        this.progressId.setTopicId(topic.getTopicId());
+    }
+
+    @Setter
     private int completedProblems;
 }

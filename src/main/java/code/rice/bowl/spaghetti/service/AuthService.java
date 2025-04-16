@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
-import code.rice.bowl.spaghetti.dto.LoginProvider;
+import code.rice.bowl.spaghetti.utils.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userInfoRepository;
-
+    private final UserService userService;
     private final GoogleLoginService googleLoginService;
     private final RedisService redisService;
     private final LevelService levelService;
@@ -38,7 +38,7 @@ public class AuthService {
         String email = getUserEmail(request);
 
         // 2. 사용자 데이터 가져오기.
-        User user = loadOrCreateUser(email);
+        User user = userService.loadOrCreate(email);
 
         // 3. JWT token 발급 하기.
         JwtTokenDto dto = JwtTokenDto.of(
@@ -76,7 +76,7 @@ public class AuthService {
         }
 
         // 3. JWT token 발급 하기.
-        User user = loadOrCreateUser(tokenEmail);
+        User user = userService.getUser(tokenEmail);
 
         JwtTokenDto dto = JwtTokenDto.of(
                 jwtProvider.generateAccessToken(user),
@@ -100,30 +100,5 @@ public class AuthService {
             return googleLoginService.getGoogleEmail(request.getAccessToken());
         }
         throw new NotImplementedException(request.getProvider() + " method isn't implemented");
-    }
-
-    /**
-     * 사용자 이메일로 사용자 정보 조회하기
-     * 새로운 회원인 경우 DB에 추가 후 리턴.
-     *
-     * @param email 사용자 이메일
-     * @return      User
-     */
-    private User loadOrCreateUser(String email) {
-        return userInfoRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .email(email)
-                            .username(email.split("@")[0])
-                            .points(0)
-                            .rating(0)
-                            .level(levelService.getUserLevel(0))
-                            .isNew(true)
-                            .build();
-
-                    userInfoRepository.save(newUser);
-
-                    return newUser;
-                });
     }
 }

@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
-import code.rice.bowl.spaghetti.dto.LoginProvider;
+import code.rice.bowl.spaghetti.utils.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.dto.response.GoogleTokenResponse;
 import code.rice.bowl.spaghetti.service.AuthService;

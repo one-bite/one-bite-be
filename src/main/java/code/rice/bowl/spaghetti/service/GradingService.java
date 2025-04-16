@@ -27,11 +27,12 @@ public class GradingService {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new NotFoundException("cannot find a problem"));
 
-    boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
+        boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
+
         int score = isCorrect ? problem.getScore() : 0;
 
         if (isCorrect) {
-            user.setPoints(user.getPoints() + score);
+            user.addPoints(score);
             userRepository.save(user);
         }
 

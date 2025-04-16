@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.ProblemDto;
 import code.rice.bowl.spaghetti.dto.response.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.response.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -28,9 +29,9 @@ public class ProblemService {
         return ProblemMapper.toDto(problemRepository.save(problem));
     }
 
-    public List<ProblemResponse> findAll() {
+    public List<ProblemSimpleResponse> findAll() {
         return problemRepository.findAll().stream()
-                .map(ProblemMapper::toDto)
+                .map(ProblemMapper::toSimpleDto)
                 .collect(Collectors.toList());
     }
 
