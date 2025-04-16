@@ -2,7 +2,9 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.BadgeDto;
 import code.rice.bowl.spaghetti.dto.response.BadgeResponse;
+import code.rice.bowl.spaghetti.dto.response.UserSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
+import code.rice.bowl.spaghetti.entity.UserBadge;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.repository.BadgeRepository;
@@ -30,9 +32,7 @@ public class BadgeService {
     }
 
     public BadgeResponse findById(Long id) {
-        Badge badge = badgeRepository.findById(id)
-                .orElseThrow(() -> new InvalidRequestException("Badge not found"));
-        return BadgeMapper.toDto(badge);
+        return BadgeMapper.toDto(getBadge(id));
     }
 
     public BadgeResponse update(Long id, BadgeDto dto) {
@@ -49,5 +49,10 @@ public class BadgeService {
 
     public void delete(Long id) {
         badgeRepository.deleteById(id);
+    }
+
+    public Badge getBadge(Long id) {
+        return badgeRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Badge not found"));
     }
 }

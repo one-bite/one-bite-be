@@ -2,18 +2,22 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.CurrentUserResponse;
+import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.mapper.UserMapper;
 import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final LevelService levelService;
 
     /**
      * 로그인한 사용자의 자세한 정보 조회
@@ -55,6 +59,37 @@ public class UserService {
     }
 
     /**
+     * 사용자 이메일로 사용자 정보 조회하기
+     * 새로운 회원인 경우 DB에 추가 후 리턴.
+     *
+     * @param email 사용자 이메일
+     * @return      User
+     */
+    public User loadOrCreate(String email) {
+        try {
+            // 기존 회원 조회
+            // 회원 정보 X -> InvalidRequestException 발생.
+            return getUser(email);
+        } catch (InvalidRequestException e) {
+            // 새로운 회원 생성.
+            User newUser = User.builder()
+                    .email(email)
+                    .username(email.split("@")[0])
+                    .points(0)
+                    .rating(0)
+                    .level(levelService.getUserLevel(0))
+                    .isNew(true)
+                    .build();
+
+            newUser.setStreak(new Streak());
+
+            userRepository.save(newUser);
+
+            return newUser;
+        }
+    }
+
+    /**
      * 사용자 삭제
      */
     @Transactional
@@ -68,8 +103,13 @@ public class UserService {
      * @param email     조회할 사용자 객체.
      * @return          조회된 상요자 객체 정보.
      */
-    private User getUser(String email) {
+    public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidRequestException("user : check your login info"));
+                .orElseThrow(() -> new NotFoundException("user : user not found"));
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("user : user not found"));
     }
 }
