@@ -15,8 +15,8 @@ import java.util.Objects;
 @Getter
 public class UserProgressId {
 
-    private Long userId;
-    private Long topicId;
+    private Long userKey;
+    private Long topicKey;
 
     @Override
     public boolean equals(Object obj) {
@@ -25,12 +25,12 @@ public class UserProgressId {
 
         UserProgressId other = (UserProgressId) obj;
 
-        return Objects.equals(userId, other.userId)
-                && Objects.equals(topicId, other.topicId);
+        return Objects.equals(userKey, other.userKey)
+                && Objects.equals(topicKey, other.topicKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, topicId);
+        return Objects.hash(userKey, topicKey);
     }
 }

@@ -21,7 +21,7 @@ public class UserProgress {
 
     public void setUser(User user) {
         this.user = user;
-        this.progressId.setUserId(user.getUserId());
+        this.progressId.setUserKey(user.getUserId());
     }
 
     @ManyToOne
@@ -30,7 +30,7 @@ public class UserProgress {
 
     public void setTopic(Topic topic) {
         this.topic = topic;
-        this.progressId.setTopicId(topic.getTopicId());
+        this.progressId.setTopicKey(topic.getTopicId());
     }
 
     @Setter
