@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 일반 적인 level 객체.
+ * 용도
+ * -
  */
 @Getter
 @Setter
 @Builder
-public class LevelDto {
+public class LevelRequest {
     @NotNull
     String name;
     @NotNull

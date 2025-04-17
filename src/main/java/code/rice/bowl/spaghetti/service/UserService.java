@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final LevelService levelService;
+    private final RankService rankService;
 
     /**
      * 로그인한 사용자의 자세한 정보 조회
@@ -77,7 +77,7 @@ public class UserService {
                     .username(email.split("@")[0])
                     .points(0)
                     .rating(0)
-                    .level(levelService.getUserLevel(0))
+                    .rank(rankService.getUserLevel(0))
                     .isNew(true)
                     .build();
 

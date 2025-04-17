@@ -12,14 +12,14 @@ public class UserMapper {
                 .username(user.getUsername())
                 .rating(user.getRating())
                 .points(user.getPoints())
-                .level(user.getLevel().getName())
+                .level(user.getRank().getName())
                 .build();
     }
 
     public static UserSimpleResponse toUserSimple(User user) {
         return UserSimpleResponse.builder()
                 .name(user.getUsername())
-                .level(user.getLevel().getName())
+                .level(user.getRank().getName())
                 .build();
     }
 }
