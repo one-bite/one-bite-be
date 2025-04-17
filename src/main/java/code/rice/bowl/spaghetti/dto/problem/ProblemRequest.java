@@ -7,9 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 용도
+ * - 문제 추가 요청
+ * - 문제 수정 요청
+ */
 @Getter
 @NoArgsConstructor
-public class ProblemDto {
+public class ProblemRequest {
     @NotNull
     private Long topicId;
 
