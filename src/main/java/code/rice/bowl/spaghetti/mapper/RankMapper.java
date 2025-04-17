@@ -1,22 +1,22 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.level.LevelRequest;
-import code.rice.bowl.spaghetti.dto.level.LevelResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankRequest;
+import code.rice.bowl.spaghetti.dto.rank.RankResponse;
 import code.rice.bowl.spaghetti.entity.Rank;
 
 
 
 public class RankMapper {
 
-    public static LevelRequest toDto(Rank user) {
-        return LevelRequest.builder()
+    public static RankRequest toDto(Rank user) {
+        return RankRequest.builder()
                 .name(user.getName())
                 .maxRating(user.getMaxRating())
                 .minRating(user.getMinRating())
                 .build();
     }
 
-    public static Rank dtoToEntity(LevelRequest dto) {
+    public static Rank dtoToEntity(RankRequest dto) {
         return Rank.builder()
                 .name(dto.getName())
                 .minRating(dto.getMinRating())
@@ -24,8 +24,8 @@ public class RankMapper {
                 .build();
     }
 
-    public static LevelResponse dtoToLevelResponse(Rank rank) {
-        return LevelResponse.builder()
+    public static RankResponse dtoToLevelResponse(Rank rank) {
+        return RankResponse.builder()
                 .id(rank.getRankId())
                 .name(rank.getName())
                 .minRating(rank.getMinRating())

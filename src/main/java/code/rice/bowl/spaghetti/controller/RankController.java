@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.level.LevelRequest;
-import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankRequest;
+import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.RankService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,30 +14,30 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("db/levels")
-@Tag(name = "CRUD: Levels (레벨)")
-public class LevelsController {
+@RequestMapping("db/rank")
+@Tag(name = "CRUD: Rank (사용자 티어)")
+public class RankController {
 
    private final RankService rankService;
 
-    // 레벨 추가
+    // 랭크 추가
     @PostMapping("")
-    ResponseEntity<?> create(@RequestBody LevelRequest dto) {
+    ResponseEntity<?> create(@RequestBody RankRequest dto) {
         rankService.create(dto);
 
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 수정
+    // 랭크 수정
     @PutMapping("/{id}")
     ResponseEntity<?> update(
             @PathVariable Long id,
-            @RequestBody LevelRequest dto) {
+            @RequestBody RankRequest dto) {
         rankService.update(id, dto);
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 삭제
+    // 랭크 삭제
     @DeleteMapping("/{id}")
     ResponseEntity<?> delete(@PathVariable Long id) {
         rankService.delete(id);
@@ -45,11 +45,11 @@ public class LevelsController {
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 전체 조회
+    // 랭크 전체 조회
     @GetMapping("")
     @Operation(summary = "전체 level id, name 만 조회 함.")
     ResponseEntity<?> selectAll() {
-        List<LevelSimpleResponse> result = rankService.selectAllSimple();
+        List<RankSimpleResponse> result = rankService.selectAllSimple();
 
         return ResponseEntity.ok(result);
     }

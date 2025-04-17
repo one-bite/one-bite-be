@@ -1,8 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.level.LevelRequest;
-import code.rice.bowl.spaghetti.dto.level.LevelResponse;
-import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankRequest;
+import code.rice.bowl.spaghetti.dto.rank.RankResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Rank;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
@@ -23,26 +23,26 @@ public class RankService {
     /**
      * level db에 저장.
      *
-     * @param levelRequest 저장할 객체
+     * @param rankRequest 저장할 객체
      */
-    public void create(LevelRequest levelRequest) {
+    public void create(RankRequest rankRequest) {
         // 1. 범위 겹침 확인.
         boolean dupRange = levelRepository.existsByMinRatingLessThanEqualAndMaxRatingGreaterThanEqual(
-                levelRequest.getMaxRating(),
-                levelRequest.getMinRating());
+                rankRequest.getMaxRating(),
+                rankRequest.getMinRating());
 
         if (dupRange) {
             throw new InvalidRequestException("level : rating 범위 겹침.");
         }
 
         // 2. 이름 중복 확인.
-        if (levelRepository.existsByName(levelRequest.getName())) {
+        if (levelRepository.existsByName(rankRequest.getName())) {
             throw new InvalidRequestException("level : 이름 중복.");
         }
 
         // 3. db에 데이터 저장.
         try {
-            levelRepository.save(RankMapper.dtoToEntity(levelRequest));
+            levelRepository.save(RankMapper.dtoToEntity(rankRequest));
         } catch (DataIntegrityViolationException e) {
             throw new InvalidRequestException("level : 이릉이 중복 됨.");
         } catch (Exception e) {
@@ -54,14 +54,14 @@ public class RankService {
      * level 데이터 수정.
      *
      * @param id        수정할 level id.
-     * @param levelRequest     수정 정보.
+     * @param rankRequest     수정 정보.
      */
-    public void update(Long id, LevelRequest levelRequest) {
+    public void update(Long id, RankRequest rankRequest) {
         Rank oldRank = selectById(id);
 
-        oldRank.setName(levelRequest.getName());
-        oldRank.setMinRating(levelRequest.getMinRating());
-        oldRank.setMaxRating(levelRequest.getMaxRating());
+        oldRank.setName(rankRequest.getName());
+        oldRank.setMinRating(rankRequest.getMinRating());
+        oldRank.setMaxRating(rankRequest.getMaxRating());
 
         levelRepository.save(oldRank);
     }
@@ -81,7 +81,7 @@ public class RankService {
      *
      * @return Level 객체에서 name, id 만 추출하여 전달.
      */
-    public List<LevelSimpleResponse> selectAllSimple() {
+    public List<RankSimpleResponse> selectAllSimple() {
         return levelRepository.findSimpleAll();
     }
 
@@ -91,7 +91,7 @@ public class RankService {
      * @param id    조회할 level id
      * @return      조회한 level response
      */
-    public LevelResponse select(Long id) {
+    public RankResponse select(Long id) {
         return RankMapper.dtoToLevelResponse(selectById(id));
     }
 

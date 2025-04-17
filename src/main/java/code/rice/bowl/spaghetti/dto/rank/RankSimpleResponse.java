@@ -1,14 +1,15 @@
-package code.rice.bowl.spaghetti.dto.level;
+package code.rice.bowl.spaghetti.dto.rank;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * level entity 에서 name, id만 담은 객체
+ * 용도
+ * - 랭크 이름과 ID 만 조회
  */
 @AllArgsConstructor
 @Getter
-public class LevelSimpleResponse {
+public class RankSimpleResponse {
     private Long id;
     private String name;
 }

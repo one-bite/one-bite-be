@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.repository;
 
-import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Rank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +23,5 @@ public interface LevelRepository extends JpaRepository<Rank, Long> {
     Optional<Rank> findByName(String name);
 
     @Query("SELECT new code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse(l.levelId, l.name) FROM Level l")
-    List<LevelSimpleResponse> findSimpleAll();
+    List<RankSimpleResponse> findSimpleAll();
 }
