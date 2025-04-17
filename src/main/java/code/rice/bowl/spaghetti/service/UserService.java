@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
-import code.rice.bowl.spaghetti.dto.user.CurrentUserResponse;
+import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
+import code.rice.bowl.spaghetti.dto.user.UserCurrentResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -25,7 +25,7 @@ public class UserService {
      * @param email     조회할 계정 정보
      * @return          조회한 계정 정보.
      */
-    public CurrentUserResponse getUserAllInfo(String email) {
+    public UserCurrentResponse getUserAllInfo(String email) {
         User current = getUser(email);
 
         return UserMapper.toCurrentUser(current);

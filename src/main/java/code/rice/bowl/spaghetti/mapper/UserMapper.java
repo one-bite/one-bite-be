@@ -1,13 +1,13 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.user.CurrentUserResponse;
+import code.rice.bowl.spaghetti.dto.user.UserCurrentResponse;
 import code.rice.bowl.spaghetti.dto.user.UserSimpleResponse;
 import code.rice.bowl.spaghetti.entity.User;
 
 public class UserMapper {
 
-    public static CurrentUserResponse toCurrentUser(User user) {
-        return CurrentUserResponse.builder()
+    public static UserCurrentResponse toCurrentUser(User user) {
+        return UserCurrentResponse.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .rating(user.getRating())

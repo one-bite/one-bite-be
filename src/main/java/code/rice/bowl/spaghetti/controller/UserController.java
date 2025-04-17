@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
+import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.UserBadgeService;
 import code.rice.bowl.spaghetti.service.UserProgressService;
