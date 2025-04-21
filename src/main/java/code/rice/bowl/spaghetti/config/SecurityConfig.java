@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     private static final String[] PERMIT_ALL = {
             // swagger 관련 도메인
+            "/api/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
