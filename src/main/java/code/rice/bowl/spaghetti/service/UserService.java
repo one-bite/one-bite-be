@@ -70,14 +70,14 @@ public class UserService {
             // 기존 회원 조회
             // 회원 정보 X -> InvalidRequestException 발생.
             return getUser(email);
-        } catch (InvalidRequestException e) {
+        } catch (Exception e) {
             // 새로운 회원 생성.
             User newUser = User.builder()
                     .email(email)
                     .username(email.split("@")[0])
                     .points(0)
                     .rating(0)
-                    .rank(rankService.getUserLevel(0))
+                    .rank(rankService.getUserRank(0))
                     .isNew(true)
                     .build();
 
