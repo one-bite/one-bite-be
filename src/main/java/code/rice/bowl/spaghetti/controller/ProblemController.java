@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.service.ProblemService;
@@ -23,7 +23,7 @@ public class ProblemController {
     // 추가
     @PostMapping
     @Operation(summary = "문제 추가")
-    public ResponseEntity<ProblemResponse> create(@RequestBody ProblemDto dto) {
+    public ResponseEntity<ProblemResponse> create(@RequestBody ProblemRequest dto) {
         return ResponseEntity.ok(problemService.create(dto));
     }
 
@@ -42,7 +42,7 @@ public class ProblemController {
 
     // 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ProblemResponse> update(@PathVariable Long id, @RequestBody ProblemDto dto) {
+    public ResponseEntity<ProblemResponse> update(@PathVariable Long id, @RequestBody ProblemRequest dto) {
         return ResponseEntity.ok(problemService.update(id, dto));
     }
 

@@ -20,7 +20,7 @@ public class AuthService {
     private final UserService userService;
     private final GoogleLoginService googleLoginService;
     private final RedisService redisService;
-    private final LevelService levelService;
+    private final RankService rankService;
 
     private final JwtProvider jwtProvider;
 

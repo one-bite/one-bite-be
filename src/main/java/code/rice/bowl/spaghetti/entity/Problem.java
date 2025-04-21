@@ -64,6 +64,7 @@ public class Problem {
     @Convert(converter = JsonNodeConverter.class)
     private JsonNode features;
 
+    // 문제 해결 시 추가되는 점수
     @Column(nullable = false)
     private int score;
 }

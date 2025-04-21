@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
@@ -22,7 +22,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final TopicRepository topicRepository;
 
-    public ProblemResponse create(ProblemDto dto) {
+    public ProblemResponse create(ProblemRequest dto) {
         Topic topic = topicRepository.findById(dto.getTopicId())
                 .orElseThrow(() -> new InvalidRequestException("Topic not found"));
         Problem problem = ProblemMapper.toEntity(dto, topic);
@@ -41,7 +41,7 @@ public class ProblemService {
         return ProblemMapper.toDto(problem);
     }
 
-    public ProblemResponse update(Long id, ProblemDto dto) {
+    public ProblemResponse update(Long id, ProblemRequest dto) {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
         Topic topic = topicRepository.findById(dto.getTopicId())

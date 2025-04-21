@@ -33,8 +33,8 @@ public class User {
 
     // 브론즈, 실버 같은 등급.
     @ManyToOne
-    @JoinColumn(name = "level_id")
-    private Level level;
+    @JoinColumn(name = "rank_id")
+    private Rank rank;
 
     private LocalDateTime createdAt;
 

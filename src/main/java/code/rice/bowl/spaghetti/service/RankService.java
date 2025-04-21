@@ -1,13 +1,13 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.level.LevelDto;
-import code.rice.bowl.spaghetti.dto.level.LevelResponse;
-import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
-import code.rice.bowl.spaghetti.entity.Level;
+import code.rice.bowl.spaghetti.dto.rank.RankRequest;
+import code.rice.bowl.spaghetti.dto.rank.RankResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
+import code.rice.bowl.spaghetti.entity.Rank;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
-import code.rice.bowl.spaghetti.mapper.LevelMapper;
-import code.rice.bowl.spaghetti.repository.LevelRepository;
+import code.rice.bowl.spaghetti.mapper.RankMapper;
+import code.rice.bowl.spaghetti.repository.RankRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,32 +17,32 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class LevelService {
-    private final LevelRepository levelRepository;
+public class RankService {
+    private final RankRepository rankRepository;
 
     /**
      * level db에 저장.
      *
-     * @param levelDto 저장할 객체
+     * @param rankRequest 저장할 객체
      */
-    public void create(LevelDto levelDto) {
+    public void create(RankRequest rankRequest) {
         // 1. 범위 겹침 확인.
-        boolean dupRange = levelRepository.existsByMinRatingLessThanEqualAndMaxRatingGreaterThanEqual(
-                levelDto.getMaxRating(),
-                levelDto.getMinRating());
+        boolean dupRange = rankRepository.existsByMinRatingLessThanEqualAndMaxRatingGreaterThanEqual(
+                rankRequest.getMaxRating(),
+                rankRequest.getMinRating());
 
         if (dupRange) {
             throw new InvalidRequestException("level : rating 범위 겹침.");
         }
 
         // 2. 이름 중복 확인.
-        if (levelRepository.existsByName(levelDto.getName())) {
+        if (rankRepository.existsByName(rankRequest.getName())) {
             throw new InvalidRequestException("level : 이름 중복.");
         }
 
         // 3. db에 데이터 저장.
         try {
-            levelRepository.save(LevelMapper.dtoToEntity(levelDto));
+            rankRepository.save(RankMapper.dtoToEntity(rankRequest));
         } catch (DataIntegrityViolationException e) {
             throw new InvalidRequestException("level : 이릉이 중복 됨.");
         } catch (Exception e) {
@@ -54,16 +54,16 @@ public class LevelService {
      * level 데이터 수정.
      *
      * @param id        수정할 level id.
-     * @param levelDto     수정 정보.
+     * @param rankRequest     수정 정보.
      */
-    public void update(Long id, LevelDto levelDto) {
-        Level oldLevel = selectById(id);
+    public void update(Long id, RankRequest rankRequest) {
+        Rank oldRank = selectById(id);
 
-        oldLevel.setName(levelDto.getName());
-        oldLevel.setMinRating(levelDto.getMinRating());
-        oldLevel.setMaxRating(levelDto.getMaxRating());
+        oldRank.setName(rankRequest.getName());
+        oldRank.setMinRating(rankRequest.getMinRating());
+        oldRank.setMaxRating(rankRequest.getMaxRating());
 
-        levelRepository.save(oldLevel);
+        rankRepository.save(oldRank);
     }
 
     /**
@@ -73,7 +73,7 @@ public class LevelService {
      */
     @Transactional
     public void delete(Long id) {
-        levelRepository.deleteById(id);
+        rankRepository.deleteById(id);
     }
 
     /**
@@ -81,8 +81,8 @@ public class LevelService {
      *
      * @return Level 객체에서 name, id 만 추출하여 전달.
      */
-    public List<LevelSimpleResponse> selectAllSimple() {
-        return levelRepository.findSimpleAll();
+    public List<RankSimpleResponse> selectAllSimple() {
+        return rankRepository.findSimpleAll();
     }
 
     /**
@@ -91,8 +91,8 @@ public class LevelService {
      * @param id    조회할 level id
      * @return      조회한 level response
      */
-    public LevelResponse select(Long id) {
-        return LevelMapper.dtoToLevelResponse(selectById(id));
+    public RankResponse select(Long id) {
+        return RankMapper.dtoToLevelResponse(selectById(id));
     }
 
     /**
@@ -102,8 +102,8 @@ public class LevelService {
      * @return      조회한 Level 객체
      * @throws InvalidRequestException 유효하지 않는 level id 인 경우
      */
-    private Level selectById(Long id) {
-        return levelRepository.findById(id)
+    private Rank selectById(Long id) {
+        return rankRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("level: " + id + " is not exists."));
     }
 
@@ -113,8 +113,8 @@ public class LevelService {
      * @param rating    현재 사용자 rating
      * @return          현재 사용자 level.
      */
-    public Level getUserLevel(int rating) {
-        return levelRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThan(0, 0)
-                .orElseThrow(() -> new NotFoundException("Level : not found"));
+    public Rank getUserRank(int rating) {
+        return rankRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThan(0, 0)
+                .orElseThrow(() -> new NotFoundException("Rank : not found"));
     }
 }
