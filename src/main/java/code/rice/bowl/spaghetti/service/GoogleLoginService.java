@@ -48,6 +48,8 @@ public class GoogleLoginService {
                     request,
                     GoogleTokenResponse.class);
 
+
+            System.out.println(response.getBody());
             GoogleTokenResponse result = response.getBody();
 
             if (result != null) {
