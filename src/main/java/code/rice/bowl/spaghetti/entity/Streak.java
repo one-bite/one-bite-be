@@ -1,7 +1,9 @@
 package code.rice.bowl.spaghetti.entity;
 
+import code.rice.bowl.spaghetti.utils.HashSetConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,8 +28,10 @@ public class Streak {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
     @Column(columnDefinition = "jsonb")
-    private HashSet<String> activeDates;
+    @Convert(converter = HashSetConverter.class)
+    private Set<String> activeDates;
 
     public void addActiveDate(int year, int month , int day) {
         activeDates.add(year + "-" + month + "-" + day);
