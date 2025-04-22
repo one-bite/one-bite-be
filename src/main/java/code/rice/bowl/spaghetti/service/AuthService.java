@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userInfoRepository;
     private final UserService userService;
+    private final AdminService adminService;
+
     private final GoogleLoginService googleLoginService;
     private final RedisService redisService;
-    private final RankService rankService;
 
     private final JwtProvider jwtProvider;
 
@@ -39,10 +39,11 @@ public class AuthService {
 
         // 2. 사용자 데이터 가져오기.
         User user = userService.loadOrCreate(email);
+        boolean isAdmin = adminService.isAdmin(user.getEmail());
 
         // 3. JWT token 발급 하기.
         JwtTokenDto dto = JwtTokenDto.of(
-                jwtProvider.generateAccessToken(user),
+                jwtProvider.generateAccessToken(user, isAdmin),
                 jwtProvider.generateRefreshToken(user)
         );
 
@@ -77,9 +78,10 @@ public class AuthService {
 
         // 3. JWT token 발급 하기.
         User user = userService.getUser(tokenEmail);
+        boolean isAdmin = adminService.isAdmin(user.getEmail());
 
         JwtTokenDto dto = JwtTokenDto.of(
-                jwtProvider.generateAccessToken(user),
+                jwtProvider.generateAccessToken(user, isAdmin),
                 jwtProvider.generateRefreshToken(user)
         );
 
