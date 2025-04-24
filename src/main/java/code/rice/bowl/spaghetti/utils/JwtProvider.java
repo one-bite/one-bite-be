@@ -4,6 +4,7 @@ import code.rice.bowl.spaghetti.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,12 +13,20 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtProvider {
+
+    // 사용자 권한 이름.
+    public static String AUTH_PREFIX = "ROLE_";
+    public static String GUEST = "GUEST";
+    public static String ADMIN = "ADMIN";
+
+    // 클레임에 들어가는 이름
+    private static final String ROLES = "roles";
+    private static final String NEW_USER = "new_user";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -43,12 +52,22 @@ public class JwtProvider {
      * @param user  사용자 정보
      * @return      String
      */
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(User user, boolean isAdmin) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + accessTokenValidate);
+
+        List<String> roles = new ArrayList<>();
+
+        // admin 계정인 경우 admin 권한 부여.
+        if (isAdmin) {
+            roles.add(AUTH_PREFIX + ADMIN);
+        }
+        roles.add(AUTH_PREFIX + GUEST);
+
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("new_user", user.isNew())
+                .claim(NEW_USER, user.isNew())
+                .claim(ROLES, roles)
                 .setExpiration(expiry)
                 .signWith(key)
                 .compact();
@@ -89,15 +108,16 @@ public class JwtProvider {
      * @return      UsernamePasswordAuthenticationToken
      */
     public Authentication getAuth(String token) {
-        Claims claims = getClaims(token);
+        String userEmail = getUserName(token);
+        List<String> roles = getRoles(token);
 
-        Set<SimpleGrantedAuthority> authoritySet = Collections.singleton(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+        Set<SimpleGrantedAuthority> authoritySet = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
 
         return new UsernamePasswordAuthenticationToken(
                 new org.springframework.security.core.userdetails.User(
-                        claims.getSubject(), "", authoritySet),
+                        userEmail, "", authoritySet),
                 token,
                 authoritySet
         );
@@ -121,6 +141,30 @@ public class JwtProvider {
         }
     }
 
+    /**
+     * 토큰에서 사용 이름 획득
+     */
+    private String getUserName(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    /**
+     * 토큰에서 사용자 권한 획득.
+     */
+    private List<String> getRoles(String token) {
+        return ((List<?>) getClaims(token).get("roles")).stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 토큰 전체 Claim 획득
+     */
     private Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

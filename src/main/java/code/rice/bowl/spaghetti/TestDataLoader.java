@@ -1,8 +1,10 @@
 package code.rice.bowl.spaghetti;
 
 import code.rice.bowl.spaghetti.entity.Problem;
+import code.rice.bowl.spaghetti.entity.Rank;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.repository.ProblemRepository;
+import code.rice.bowl.spaghetti.repository.RankRepository;
 import code.rice.bowl.spaghetti.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +19,7 @@ public class TestDataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
+    private final RankRepository rankRepository;
 
     ObjectMapper mapper = new ObjectMapper();
     JsonNode json;
@@ -37,6 +40,14 @@ public class TestDataLoader implements CommandLineRunner {
                     .username("테스트 유저")
                     .points(0)
                     .rating(0)
+                    .build());
+        }
+
+        if (rankRepository.count() == 0) {
+            rankRepository.save(Rank.builder()
+                    .name("test")
+                    .minRating(0)
+                    .maxRating(100)
                     .build());
         }
 
