@@ -6,6 +6,10 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+/**
+ * 용도
+ * - 문제 풀이 기록 조회 반환 객체
+ */
 @Getter
 @Builder
 @AllArgsConstructor

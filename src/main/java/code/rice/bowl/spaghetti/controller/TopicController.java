@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
-import code.rice.bowl.spaghetti.dto.topic.TopicDto;
+import code.rice.bowl.spaghetti.dto.topic.TopicRequest;
 import code.rice.bowl.spaghetti.dto.topic.TopicResponse;
 import code.rice.bowl.spaghetti.service.TopicService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +20,7 @@ public class TopicController {
 
     // 추가
     @PostMapping
-    public ResponseEntity<TopicResponse> create(@RequestBody TopicDto dto) {
+    public ResponseEntity<TopicResponse> create(@RequestBody TopicRequest dto) {
         return ResponseEntity.ok(topicService.create(dto));
     }
 
@@ -38,7 +38,7 @@ public class TopicController {
 
     // 수정
     @PutMapping("/{id}")
-    public ResponseEntity<TopicResponse> update(@PathVariable Long id, @RequestBody TopicDto dto) {
+    public ResponseEntity<TopicResponse> update(@PathVariable Long id, @RequestBody TopicRequest dto) {
         return ResponseEntity.ok(topicService.update(id, dto));
     }
 
