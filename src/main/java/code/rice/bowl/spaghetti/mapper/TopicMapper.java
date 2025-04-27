@@ -1,12 +1,12 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.topic.TopicDto;
+import code.rice.bowl.spaghetti.dto.topic.TopicRequest;
 import code.rice.bowl.spaghetti.dto.topic.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
 
 public class TopicMapper {
 
-    public static Topic toEntity(TopicDto dto) {
+    public static Topic toEntity(TopicRequest dto) {
         return Topic.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())

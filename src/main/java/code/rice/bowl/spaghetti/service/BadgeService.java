@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeRequest;
 import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -18,7 +18,7 @@ public class BadgeService {
 
     private final BadgeRepository badgeRepository;
 
-    public BadgeResponse create(BadgeDto dto) {
+    public BadgeResponse create(BadgeRequest dto) {
         Badge badge = BadgeMapper.toEntity(dto);
         return BadgeMapper.toDto(badgeRepository.save(badge));
     }
@@ -33,7 +33,7 @@ public class BadgeService {
         return BadgeMapper.toDto(getBadge(id));
     }
 
-    public BadgeResponse update(Long id, BadgeDto dto) {
+    public BadgeResponse update(Long id, BadgeRequest dto) {
         Badge badge = badgeRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Badge not found"));
 

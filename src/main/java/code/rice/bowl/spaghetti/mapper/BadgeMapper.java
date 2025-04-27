@@ -1,12 +1,12 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeRequest;
 import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.entity.Badge;
 
 public class BadgeMapper {
 
-    public static Badge toEntity(BadgeDto dto) {
+    public static Badge toEntity(BadgeRequest dto) {
         return Badge.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
