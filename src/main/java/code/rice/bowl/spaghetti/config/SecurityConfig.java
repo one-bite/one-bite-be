@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.config;
 import code.rice.bowl.spaghetti.exception.JwtAccessDeniedHandler;
 import code.rice.bowl.spaghetti.exception.JwtAuthenticationEntryPoint;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
+import code.rice.bowl.spaghetti.service.RedisService;
 import code.rice.bowl.spaghetti.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +26,8 @@ import java.rmi.AccessException;
 public class SecurityConfig {
 
     private final NotFoundApiFilter notFoundApiFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -43,6 +44,8 @@ public class SecurityConfig {
     private static final String[] ALLOW_GUEST = {
             "/submit/**",
             "/problem/**",
+            "/oauth/logout",
+            "/oauth/verify"
     };
 
     private static final String[] PERMIT_ALL = {
@@ -63,9 +66,7 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityFilterChain filterChain(
-            HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(AbstractHttpConfigurer::disable)
@@ -97,8 +98,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtProvider);
-    }
 }

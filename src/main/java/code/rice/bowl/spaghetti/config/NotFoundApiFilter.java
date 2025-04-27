@@ -45,7 +45,6 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
             // 없는 api 인 경우 -> 404 반환.
 
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\": \"404\", \"message\": \"API Not Found\"}");
             return; // 필터 체인 중단

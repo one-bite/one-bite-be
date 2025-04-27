@@ -4,7 +4,6 @@ import code.rice.bowl.spaghetti.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -93,13 +92,17 @@ public class JwtProvider {
      * @param token 사용자 토큰
      * @return      user email string
      */
-    public String getEmailFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    public String getUserEmail(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    /**
+     * 현재 토큰의 만료 까지 남은 시간 구함.
+     * @param token 사용자 토큰
+     * @return      만료 시간 (밀리초)
+     */
+    public Long getExpiration(String token) {
+        return getClaims(token).getExpiration().getTime();
     }
 
     /**
@@ -108,7 +111,7 @@ public class JwtProvider {
      * @return      UsernamePasswordAuthenticationToken
      */
     public Authentication getAuth(String token) {
-        String userEmail = getUserName(token);
+        String userEmail = getUserEmail(token);
         List<String> roles = getRoles(token);
 
         Set<SimpleGrantedAuthority> authoritySet = roles.stream()
@@ -139,18 +142,6 @@ public class JwtProvider {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    /**
-     * 토큰에서 사용 이름 획득
-     */
-    private String getUserName(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
     }
 
     /**
