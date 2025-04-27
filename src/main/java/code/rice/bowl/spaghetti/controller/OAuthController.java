@@ -9,7 +9,9 @@ import code.rice.bowl.spaghetti.dto.response.GoogleTokenResponse;
 import code.rice.bowl.spaghetti.service.AuthService;
 import code.rice.bowl.spaghetti.service.GoogleLoginService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,10 +48,23 @@ public class OAuthController {
 
     // 로그아웃
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader(JwtAuthenticationFilter.AUTH_HEADER) String token) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String token = request.getHeader(JwtAuthenticationFilter.AUTH_HEADER);
+
+        // security chain 에서 필터링 되지만 혹시나 해서 추가.
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         String userToken = token.replace(JwtAuthenticationFilter.TOKEN_PREFIX, "");
         authService.logout(userToken);
 
+        return ResponseEntity.ok(new SimpleOkResponse("ok"));
+    }
+
+    // 사용자 인증
+    @GetMapping("/verify")
+    public ResponseEntity<?> verify() {
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 }
