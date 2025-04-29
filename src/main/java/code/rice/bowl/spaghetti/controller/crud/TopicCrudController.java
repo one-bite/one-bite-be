@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/db/topics")
 @RequiredArgsConstructor
 @Tag(name = "CRUD: Topic (주제)")
-public class TopicController {
+public class TopicCrudController {
 
     private final TopicService topicService;
 

@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("db/rank")
 @Tag(name = "CRUD: Rank (사용자 티어)")
-public class RankController {
+public class RankCrudController {
 
    private final RankService rankService;
 
