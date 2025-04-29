@@ -1,9 +1,9 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
-import code.rice.bowl.spaghetti.dto.level.LevelDto;
-import code.rice.bowl.spaghetti.dto.level.LevelSimpleResponse;
+import code.rice.bowl.spaghetti.dto.rank.RankRequest;
+import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
-import code.rice.bowl.spaghetti.service.LevelService;
+import code.rice.bowl.spaghetti.service.RankService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,49 +14,49 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("db/levels")
-@Tag(name = "CRUD: Levels (레벨)")
-public class LevelsController {
+@RequestMapping("db/rank")
+@Tag(name = "CRUD: Rank (사용자 티어)")
+public class RankCrudController {
 
-   private final LevelService levelService;
+   private final RankService rankService;
 
-    // 레벨 추가
+    // 랭크 추가
     @PostMapping("")
-    ResponseEntity<?> create(@RequestBody LevelDto dto) {
-        levelService.create(dto);
+    ResponseEntity<?> create(@RequestBody RankRequest dto) {
+        rankService.create(dto);
 
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 수정
+    // 랭크 수정
     @PutMapping("/{id}")
     ResponseEntity<?> update(
             @PathVariable Long id,
-            @RequestBody LevelDto dto) {
-        levelService.update(id, dto);
+            @RequestBody RankRequest dto) {
+        rankService.update(id, dto);
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 삭제
+    // 랭크 삭제
     @DeleteMapping("/{id}")
     ResponseEntity<?> delete(@PathVariable Long id) {
-        levelService.delete(id);
+        rankService.delete(id);
 
         return ResponseEntity.ok(new SimpleOkResponse("ok"));
     }
 
-    // 레벨 전체 조회
+    // 랭크 전체 조회
     @GetMapping("")
     @Operation(summary = "전체 level id, name 만 조회 함.")
     ResponseEntity<?> selectAll() {
-        List<LevelSimpleResponse> result = levelService.selectAllSimple();
+        List<RankSimpleResponse> result = rankService.selectAllSimple();
 
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<?> select(@PathVariable Long id) {
-        return ResponseEntity.ok(levelService.select(id));
+        return ResponseEntity.ok(rankService.select(id));
     }
 
 

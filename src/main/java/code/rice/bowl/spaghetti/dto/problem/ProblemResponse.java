@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * 용도
+ * - 전체 조회 외 반환하는 객체
+ */
 @Getter
 @Builder
 @AllArgsConstructor

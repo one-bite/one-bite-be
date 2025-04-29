@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.topic.TopicDto;
+import code.rice.bowl.spaghetti.dto.topic.TopicRequest;
 import code.rice.bowl.spaghetti.dto.topic.TopicResponse;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -19,7 +19,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-    public TopicResponse create(TopicDto dto) {
+    public TopicResponse create(TopicRequest dto) {
         Topic topic = TopicMapper.toEntity(dto);
         return TopicMapper.toDto(topicRepository.save(topic));
     }
@@ -35,7 +35,7 @@ public class TopicService {
         return TopicMapper.toDto(topic);
     }
 
-    public TopicResponse update(Long id, TopicDto dto) {
+    public TopicResponse update(Long id, TopicRequest dto) {
         Topic topic = getTopic(id);
 
         topic.setName(dto.getName());

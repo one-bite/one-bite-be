@@ -1,6 +1,6 @@
 package code.rice.bowl.spaghetti.mapper;
 
-import code.rice.bowl.spaghetti.dto.problem.ProblemDto;
+import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
@@ -8,7 +8,7 @@ import code.rice.bowl.spaghetti.entity.Topic;
 
 public class ProblemMapper {
 
-    public static Problem toEntity(ProblemDto dto, Topic topic) {
+    public static Problem toEntity(ProblemRequest dto, Topic topic) {
         return Problem.builder()
                 .topic(topic)
                 .title(dto.getTitle())

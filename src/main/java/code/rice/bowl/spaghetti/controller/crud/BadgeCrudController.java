@@ -1,6 +1,6 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
-import code.rice.bowl.spaghetti.dto.badge.BadgeDto;
+import code.rice.bowl.spaghetti.dto.badge.BadgeRequest;
 import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
 import code.rice.bowl.spaghetti.service.BadgeService;
 import code.rice.bowl.spaghetti.service.UserBadgeService;
@@ -15,14 +15,14 @@ import java.util.List;
 @RequestMapping("/db/badges")
 @RequiredArgsConstructor
 @Tag(name = "CRUD: Badge (뱃지)")
-public class BadgeController {
+public class BadgeCrudController {
 
     private final BadgeService badgeService;
     private final UserBadgeService userBadgeService;
 
     // 추가
     @PostMapping
-    public ResponseEntity<BadgeResponse> create(@RequestBody BadgeDto dto) {
+    public ResponseEntity<BadgeResponse> create(@RequestBody BadgeRequest dto) {
         return ResponseEntity.ok(badgeService.create(dto));
     }
 
@@ -46,7 +46,7 @@ public class BadgeController {
 
     // 수정
     @PutMapping("/{id}")
-    public ResponseEntity<BadgeResponse> update(@PathVariable Long id, @RequestBody BadgeDto dto) {
+    public ResponseEntity<BadgeResponse> update(@PathVariable Long id, @RequestBody BadgeRequest dto) {
         return ResponseEntity.ok(badgeService.update(id, dto));
     }
 

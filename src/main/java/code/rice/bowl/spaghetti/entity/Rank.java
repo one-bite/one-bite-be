@@ -6,15 +6,15 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "levels")
+@Table(name = "ranks")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Level {
+public class Rank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long levelId;
+    private Long rankId;
 
     @Column(nullable = false, unique = true)
     private String name;

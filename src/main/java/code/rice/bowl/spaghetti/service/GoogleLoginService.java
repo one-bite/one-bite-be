@@ -1,13 +1,20 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.dto.response.GoogleErrorResponse;
 import code.rice.bowl.spaghetti.dto.response.GoogleTokenResponse;
 import code.rice.bowl.spaghetti.dto.response.GoogleUserInfoResponse;
+import code.rice.bowl.spaghetti.exception.InternalServerError;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
 
 @Service
 public class GoogleLoginService {
@@ -56,7 +63,40 @@ public class GoogleLoginService {
                 throw new InvalidRequestException("Check your auth code");
             }
         } catch (HttpClientErrorException e) {
-            throw new InvalidRequestException("Check your auth code");
+            // error code 400 : auth_code error or redirect url error
+            // else : client id error or user secret error
+            if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                String message = e.getResponseBodyAsString();
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                try {
+                    // 리턴 값을 파싱.
+                    GoogleErrorResponse response =
+                            objectMapper.readValue(message, GoogleErrorResponse.class);
+
+                    // 에러 문에 error 필드가 없는 경우 -> 구글에서 뭔가 수정 함.
+                    if (response.error.isEmpty()) {
+                        throw new InternalServerError("Invalid GoogleError, error is empty");
+                    }
+
+                    // 리다이렉트 문 때문에 발생한 경우. 500 에러
+                    // 그 외 일괄적으로 사용자 잘 못으로 리턴.
+                    if (response.error.startsWith("redirect")) {
+                        throw new InternalServerError("Redirect error");
+                    } else {
+                        throw new InvalidRequestException("Check your auth code");
+                    }
+
+                } catch (JsonProcessingException ex) {
+                    // 파싱 실패 -> 구글에서 리턴하는 데이터 구조 변경.
+                    // 500 에러 예정
+                    throw new InternalServerError("Invalid GoogleError, format change.");
+                }
+
+            } else {
+                throw new InternalServerError("Env error");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Unexpected error : google");
         }

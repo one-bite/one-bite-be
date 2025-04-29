@@ -1,7 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.request.UserPatchRequest;
-import code.rice.bowl.spaghetti.dto.user.CurrentUserResponse;
+import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
+import code.rice.bowl.spaghetti.dto.user.UserCurrentResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final LevelService levelService;
+    private final RankService rankService;
 
     /**
      * 로그인한 사용자의 자세한 정보 조회
@@ -25,7 +25,7 @@ public class UserService {
      * @param email     조회할 계정 정보
      * @return          조회한 계정 정보.
      */
-    public CurrentUserResponse getUserAllInfo(String email) {
+    public UserCurrentResponse getUserAllInfo(String email) {
         User current = getUser(email);
 
         return UserMapper.toCurrentUser(current);
@@ -70,14 +70,14 @@ public class UserService {
             // 기존 회원 조회
             // 회원 정보 X -> InvalidRequestException 발생.
             return getUser(email);
-        } catch (InvalidRequestException e) {
+        } catch (Exception e) {
             // 새로운 회원 생성.
             User newUser = User.builder()
                     .email(email)
                     .username(email.split("@")[0])
                     .points(0)
                     .rating(0)
-                    .level(levelService.getUserLevel(0))
+                    .rank(rankService.getUserRank(0))
                     .isNew(true)
                     .build();
 
