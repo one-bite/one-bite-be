@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
 import code.rice.bowl.spaghetti.dto.rank.RankRequest;
 import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("db/rank")
 @Tag(name = "CRUD: Rank (사용자 티어)")
-public class RankController {
+public class RankCrudController {
 
    private final RankService rankService;
 

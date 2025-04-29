@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
 import code.rice.bowl.spaghetti.dto.badge.BadgeRequest;
 import code.rice.bowl.spaghetti.dto.badge.BadgeResponse;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/db/badges")
 @RequiredArgsConstructor
 @Tag(name = "CRUD: Badge (뱃지)")
-public class BadgeController {
+public class BadgeCrudController {
 
     private final BadgeService badgeService;
     private final UserBadgeService userBadgeService;

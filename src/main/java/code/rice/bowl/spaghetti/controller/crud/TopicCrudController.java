@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
 import code.rice.bowl.spaghetti.dto.topic.TopicRequest;
 import code.rice.bowl.spaghetti.dto.topic.TopicResponse;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/db/topics")
 @RequiredArgsConstructor
 @Tag(name = "CRUD: Topic (주제)")
-public class TopicController {
+public class TopicCrudController {
 
     private final TopicService topicService;
 
