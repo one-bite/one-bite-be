@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
 import code.rice.bowl.spaghetti.dto.rank.RankRequest;
 import code.rice.bowl.spaghetti.dto.rank.RankSimpleResponse;

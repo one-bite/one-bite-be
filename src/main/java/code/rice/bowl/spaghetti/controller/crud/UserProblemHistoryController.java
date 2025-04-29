@@ -1,4 +1,4 @@
-package code.rice.bowl.spaghetti.controller;
+package code.rice.bowl.spaghetti.controller.crud;
 
 import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistoryResponse;
 import code.rice.bowl.spaghetti.dto.userproblemhistory.UserProblemHistorySummaryResponse;
