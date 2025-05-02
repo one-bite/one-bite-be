@@ -1,14 +1,14 @@
 package code.rice.bowl.spaghetti.entity;
 
+import code.rice.bowl.spaghetti.utils.DateUtils;
 import code.rice.bowl.spaghetti.utils.HashSetConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,14 +28,12 @@ public class Streak {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
-    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Convert(converter = HashSetConverter.class)
-    private Set<String> activeDates;
+    @Builder.Default
+    private Set<String> activeDates = new HashSet<>();
 
-    public void addActiveDate(int year, int month , int day) {
-        String today = year + "-" + month + "-" + day;
-
+    public void addActiveDate(String today) {
         // 0. 오늘의 스트릭을 이미 추가한 경우 -> 리턴
         if (today.equals(updatedAt))
             return;
@@ -44,24 +42,21 @@ public class Streak {
         activeDates.add(today);
 
         // 2. 최대 스트릭과 현재 스트릭 계산.
-        LocalDate now = LocalDate.parse(today);
-        LocalDate last = LocalDate.parse(updatedAt);
-
-        // 2-1. 마지막 푼 날과 하루 차이 인지 확인.
-        if (last.plusDays(1).equals(now)) {
+        if (DateUtils.diffOneDay(updatedAt, today)) {
             nowStreakCount += 1;
         } else {
-            nowStreakCount = 0;
+            nowStreakCount = 1;
         }
 
-        // 최대 스트릭 갱신.
+        // 3. 최대 스트릭 갱신.
         maxStreakCount = Math.max(nowStreakCount, maxStreakCount);
 
-        // 마지막 제출일을 오늘로 설정.
+        // 4. 마지막 제출일을 오늘로 설정.
         updatedAt = today;
     }
 
-    private String updatedAt;
+    @Builder.Default
+    private String updatedAt = "1999-01-01";
 
     private int maxStreakCount;
 

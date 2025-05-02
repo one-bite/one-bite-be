@@ -1,9 +1,7 @@
 package code.rice.bowl.spaghetti.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * 각 사용자의 오늘의 풀어 할 문제를 저장하는 테이블
@@ -16,18 +14,18 @@ import lombok.Setter;
         name = "today_problems",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "problem_id"})}
 )
+@NoArgsConstructor
+@AllArgsConstructor
 public class TodayProblem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long todayProblemId;
 
-    @Column(nullable = false)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
     @ManyToOne
     @JoinColumn(name = "problem_id")
     private Problem problem;
