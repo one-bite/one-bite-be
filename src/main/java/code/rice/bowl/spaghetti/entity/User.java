@@ -47,6 +47,10 @@ public class User {
     @Builder.Default
     private List<UserBadge> userBadges = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<TodayProblem> todayProblems = new ArrayList<>();
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Setter(AccessLevel.NONE)
     private Streak streak;
@@ -67,12 +71,12 @@ public class User {
         this.points += additionalPoints;
 
         // 2. 스트릭 업데이트
-        LocalDateTime now = LocalDateTime.now();
-        int year = now.getYear();
-        int month = now.getMonthValue();
-        int day = now.getDayOfMonth();
+//        LocalDateTime now = LocalDateTime.now();
+//        int year = now.getYear();
+//        int month = now.getMonthValue();
+//        int day = now.getDayOfMonth();
 
-        this.streak.addActiveDate(year, month, day);
+//        this.streak.addActiveDate(year, month, day);
     }
 
     @PrePersist
