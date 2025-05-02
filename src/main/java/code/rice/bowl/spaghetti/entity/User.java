@@ -31,6 +31,9 @@ public class User {
 
     private int points;
 
+    @Builder.Default
+    private int courseId = 0;
+
     // 브론즈, 실버 같은 등급.
     @ManyToOne
     @JoinColumn(name = "rank_id")
