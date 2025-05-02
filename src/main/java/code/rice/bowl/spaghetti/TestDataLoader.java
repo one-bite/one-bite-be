@@ -1,8 +1,10 @@
 package code.rice.bowl.spaghetti;
 
+import code.rice.bowl.spaghetti.entity.Course;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Rank;
 import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.repository.CourseRepository;
 import code.rice.bowl.spaghetti.repository.ProblemRepository;
 import code.rice.bowl.spaghetti.repository.RankRepository;
 import code.rice.bowl.spaghetti.repository.UserRepository;
@@ -20,6 +22,7 @@ public class TestDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
     private final RankRepository rankRepository;
+    private final CourseRepository courseRepository;
 
     ObjectMapper mapper = new ObjectMapper();
     JsonNode json;
@@ -52,15 +55,19 @@ public class TestDataLoader implements CommandLineRunner {
         }
 
         if (problemRepository.count() == 0) {
-            problemRepository.save(Problem.builder()
+            Problem problem = Problem.builder()
                     .title("Test Problem")
                     .description(json)
                     .answer("2")
                     .score(100)
                     .questionType(Problem.QuestionType.multiple_choice)
                     .difficulty(Problem.DifficultyLevel.EASY)
-                    .build());
+                    .build();
 
+            problemRepository.save(problem);
+            courseRepository.save(Course.builder()
+                            .problem(problemRepository.findByTitle(problem.getTitle()).orElse(problem))
+                    .build());
         }
     }
 }
