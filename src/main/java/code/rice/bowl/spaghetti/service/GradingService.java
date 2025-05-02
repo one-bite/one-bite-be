@@ -19,6 +19,9 @@ public class GradingService {
     private final ProblemRepository problemRepository;
     private final UserProblemHistoryRepository historyRepository;
 
+    private final StreakService streakService;
+    private final TodayProblemService todayProblemService;
+
     public SubmitResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("cannot find a specific user"));
@@ -34,6 +37,12 @@ public class GradingService {
             user.addPoints(score);
             userRepository.save(user);
         }
+
+        // 1. 오늘 해당 문제에 대하여 제출하였음을 변경.
+        todayProblemService.setSubmit(userId, problemId);
+
+        // 2. 오늘 스트릭 증가 여부를 처리.
+        streakService.updateStreak(userId);
 
         UserProblemHistory history = UserProblemHistory.builder()
                 .user(user)

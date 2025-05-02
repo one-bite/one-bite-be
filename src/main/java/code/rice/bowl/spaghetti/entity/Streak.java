@@ -34,24 +34,36 @@ public class Streak {
     private Set<String> activeDates;
 
     public void addActiveDate(int year, int month , int day) {
-        activeDates.add(year + "-" + month + "-" + day);
+        String today = year + "-" + month + "-" + day;
 
-        updatedAt = LocalDateTime.now();
+        // 0. 오늘의 스트릭을 이미 추가한 경우 -> 리턴
+        if (today.equals(updatedAt))
+            return;
+
+        // 1. 오늘이미 해결 했음을 저장 함.
+        activeDates.add(today);
+
+        // 2. 최대 스트릭과 현재 스트릭 계산.
+        LocalDate now = LocalDate.parse(today);
+        LocalDate last = LocalDate.parse(updatedAt);
+
+        // 2-1. 마지막 푼 날과 하루 차이 인지 확인.
+        if (last.plusDays(1).equals(now)) {
+            nowStreakCount += 1;
+        } else {
+            nowStreakCount = 0;
+        }
+
+        // 최대 스트릭 갱신.
+        maxStreakCount = Math.max(nowStreakCount, maxStreakCount);
+
+        // 마지막 제출일을 오늘로 설정.
+        updatedAt = today;
     }
 
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
     private int maxStreakCount;
 
     private int nowStreakCount;
-
-    @PrePersist
-    protected void onCreate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
