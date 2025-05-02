@@ -1,20 +1,18 @@
 package code.rice.bowl.spaghetti.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Table(name = "courses")
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
     @OneToOne
