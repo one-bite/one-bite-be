@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.mapper;
 
+import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
@@ -41,6 +42,14 @@ public class ProblemMapper {
                 .problemId(problem.getProblemId())
                 .title(problem.getTitle())
                 .score(problem.getScore())
+                .build();
+    }
+
+    public static ProblemDetailResponse toDetailDto(Problem problem) {
+        return ProblemDetailResponse.builder()
+                .title(problem.getTitle())
+                .problemId(problem.getProblemId())
+                .description(problem.getDescription())
                 .build();
     }
 }

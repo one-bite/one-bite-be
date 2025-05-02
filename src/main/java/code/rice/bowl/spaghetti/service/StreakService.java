@@ -1,11 +1,12 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.dto.streak.StreakInfoResponse;
 import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.mapper.StreakMapper;
+import code.rice.bowl.spaghetti.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +27,17 @@ public class StreakService {
             return;
 
         // 2. 스트릭 업데이트
-        LocalDateTime now = LocalDateTime.now();
-        int year = now.getYear();
-        int month = now.getMonthValue();
-        int day = now.getDayOfMonth();
-
         User nowUser = userService.getUser(userId);
 
-        nowUser.getStreak().addActiveDate(year, month, day);
+        nowUser.getStreak().addActiveDate(DateUtils.today());
+    }
+
+    /**
+     * 사용자라 스트릭 정보 리턴
+     * @param email 현재 사용자 이메일 정보
+     * @return  사용자의 스트릭 정보.
+     */
+    public StreakInfoResponse getStreak(String email) {
+        return StreakMapper.toDto(userService.getUser(email).getStreak());
     }
 }

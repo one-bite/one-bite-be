@@ -32,7 +32,7 @@ public class User {
     private int points;
 
     @Builder.Default
-    private int courseId = 0;
+    private long courseId = 1;
 
     // 브론즈, 실버 같은 등급.
     @ManyToOne
