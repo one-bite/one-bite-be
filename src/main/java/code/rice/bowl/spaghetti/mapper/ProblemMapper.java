@@ -9,6 +9,7 @@ import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.entity.User;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,9 @@ public class ProblemMapper {
     public static ProblemResponse toDto(Problem problem) {
         Long categoryId = problem.getCategory() != null ? problem.getCategory().getCategoryId() : null;
         Long userId = problem.getUser() != null ? problem.getUser().getUserId() : null;
-        Long[] topicIds = problem.getTopics() != null ?
-                problem.getTopics().stream().map(Topic::getTopicId).toArray(Long[]::new) : new Long[]{};
+        List<String> topicNames = (problem.getTopics() != null && !problem.getTopics().isEmpty())
+                ? problem.getTopics().stream().map(Topic::getName).collect(Collectors.toList())
+                : Collections.emptyList();
 
         return ProblemResponse.builder()
                 .problemId(problem.getProblemId())
@@ -44,7 +46,7 @@ public class ProblemMapper {
                 .point(problem.getPoint())
                 .categoryId(categoryId)
                 .userId(userId)
-                .topicIds(topicIds)
+                .topicNames(topicNames)
                 .build();
     }
 

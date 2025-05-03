@@ -15,6 +15,7 @@ import code.rice.bowl.spaghetti.repository.TopicRepository;
 import code.rice.bowl.spaghetti.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,25 +30,36 @@ public class ProblemService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public ProblemResponse create(ProblemRequest dto) {
+        // 1. Category 조회
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new InvalidRequestException("Category not found"));
 
+        // 2. Topic code 목록 처리: 없는 코드는 자동 생성
         List<Topic> topics = new ArrayList<>();
-        if (dto.getTopicIds() != null) {
-            for (Long topicId : dto.getTopicIds()) {
-                Topic topic = topicRepository.findById(topicId)
-                        .orElseThrow(() -> new InvalidRequestException("Topic not found: id=" + topicId));
+        if (dto.getTopicCodes() != null) {
+            for (String code : dto.getTopicCodes()) {
+                Topic topic = topicRepository.findByCode(code)
+                        .orElseGet(() -> topicRepository.save(
+                                Topic.builder()
+                                        .code(code)
+                                        .name(code)    // 초기엔 code를 name으로 설정
+                                        .total(0)
+                                        .build()
+                        ));
                 topics.add(topic);
             }
         }
 
+        // 3. User 처리 (관리자 문제면 null)
         User user = null;
         if (dto.getUserId() != null) {
             user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
         }
 
+        // 4. Problem 저장
         Problem problem = ProblemMapper.toEntity(dto, category, topics, user);
         return ProblemMapper.toDto(problemRepository.save(problem));
     }
@@ -64,30 +76,43 @@ public class ProblemService {
         return ProblemMapper.toDto(problem);
     }
 
+    @Transactional
     public ProblemResponse update(Long id, ProblemRequest dto) {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
 
+        // 1. Category
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new InvalidRequestException("Category not found"));
         problem.setCategory(category);
 
+        // 2. Topic code 목록 처리
         List<Topic> topics = new ArrayList<>();
-        if (dto.getTopicIds() != null) {
-            for (Long topicId : dto.getTopicIds()) {
-                Topic topic = topicRepository.findById(topicId)
-                        .orElseThrow(() -> new InvalidRequestException("Topic not found: id=" + topicId));
+        if (dto.getTopicCodes() != null) {
+            for (String code : dto.getTopicCodes()) {
+                Topic topic = topicRepository.findByCode(code)
+                        .orElseGet(() -> topicRepository.save(
+                                Topic.builder()
+                                        .code(code)
+                                        .name(code)
+                                        .total(0)
+                                        .build()
+                        ));
                 topics.add(topic);
             }
         }
         problem.setTopics(topics);
 
+        // 3. User
         if (dto.getUserId() != null) {
             User user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
             problem.setUser(user);
+        } else {
+            problem.setUser(null);
         }
 
+        // 4. 나머지 필드
         problem.setTitle(dto.getTitle());
         problem.setDescription(dto.getDescription());
         problem.setQuestionType(dto.getQuestionType());

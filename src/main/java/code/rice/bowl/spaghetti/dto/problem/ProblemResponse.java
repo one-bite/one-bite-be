@@ -1,10 +1,12 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
 import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
 
 /**
  * 용도
@@ -23,5 +25,5 @@ public class ProblemResponse {
     private int point;
     private Long categoryId;
     private Long userId;
-    private Long[] topicIds;
+    private List<String> topicNames;
 }

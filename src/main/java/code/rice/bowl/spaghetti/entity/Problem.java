@@ -25,14 +25,11 @@ public class Problem {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    /**
-     * 다대다로 변경된 토픽 매핑
-     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "problem_topic",
             joinColumns = @JoinColumn(name = "problem_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")
+            inverseJoinColumns = @JoinColumn(name = "topic_code")
     )
     @Builder.Default
     private List<Topic> topics = new ArrayList<>();
