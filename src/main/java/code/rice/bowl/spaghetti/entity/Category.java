@@ -32,9 +32,6 @@ public class Category {
     @Column(nullable = false)
     private int total;
 
-    /**
-     * 카테고리와 문제 간의 일대다 관계
-     */
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Problem> problems = new ArrayList<>();

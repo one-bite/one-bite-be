@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
 import code.rice.bowl.spaghetti.dto.user.UserTodayProblemResponse;
+import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.TodayProblem;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
@@ -112,18 +113,24 @@ public class TodayProblemService {
     @Transactional
     private List<TodayProblem> createTodayProblems(User user) {
         long start = user.getCourseId();
-
         List<TodayProblem> userProblems = new ArrayList<>();
+
         for (long i = start; i < start + cnt; i++) {
+            Problem p = courseService.getCourse(i).getProblem();
+
+            // AI가 생성한 문제(user != null)는 오늘 문제에 포함하지 않음
+            if (p.getUser() != null) {
+                continue;
+            }
+
             userProblems.add(TodayProblem.builder()
                     .user(user)
-                    .problem(courseService.getCourse(i).getProblem())
+                    .problem(p)
                     .build());
-
         }
 
         todayProblemRepository.saveAll(userProblems);
-
         return userProblems;
     }
+
 }
