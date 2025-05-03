@@ -18,38 +18,37 @@ public class GradingService {
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
     private final UserProblemHistoryRepository historyRepository;
-    private final AiGeneratedProblemService aiService;
-
-    private String normalize(String str) {
-        return str == null ? "" : str.trim().toLowerCase();
-    }
 
     public SubmitResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("cannot find user"));
+                .orElseThrow(() -> new NotFoundException("cannot find a specific user"));
 
         Problem problem = problemRepository.findById(problemId)
-                .orElseThrow(() -> new NotFoundException("cannot find problem"));
+                .orElseThrow(() -> new NotFoundException("cannot find a problem"));
 
         boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
+
         int score = isCorrect ? problem.getScore() : 0;
 
         if (isCorrect) {
             user.addPoints(score);
             userRepository.save(user);
-        } else {
-            // ❗ 틀렸을 경우 AI 문제 요청 및 저장
-            aiService.requestAndSave(user, problem);
         }
 
-        historyRepository.save(UserProblemHistory.builder()
+        UserProblemHistory history = UserProblemHistory.builder()
                 .user(user)
                 .problem(problem)
                 .submittedAnswer(submittedAnswer)
                 .isCorrect(isCorrect)
                 .solveTime(solveTime)
-                .build());
+                .build();
+        historyRepository.save(history);
 
         return new SubmitResponse(isCorrect, score);
+    }
+
+    //Trimming
+    private String normalize(String str) {
+        return str == null ? "" : str.trim().toLowerCase();
     }
 }
