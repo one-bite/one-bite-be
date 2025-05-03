@@ -17,6 +17,7 @@ public class InitDataLoader implements CommandLineRunner {
     private final RankRepository rankRepository;
     private final ProblemRepository problemRepository;
     private final CourseRepository courseRepository;
+    private final TopicRepository topicRepository;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
@@ -27,8 +28,7 @@ public class InitDataLoader implements CommandLineRunner {
                     .name("test")
                     .minRating(0)
                     .maxRating(100)
-                    .build()
-            );
+                    .build());
         }
 
         // 2) Category 초기화
@@ -38,8 +38,7 @@ public class InitDataLoader implements CommandLineRunner {
                                 .categoryName("Python")
                                 .description("파이썬")
                                 .total(0)
-                                .build()
-                ));
+                                .build()));
 
         // 3) User 초기화
         User testUser = userRepository.findByEmail("test@example.com")
@@ -50,14 +49,12 @@ public class InitDataLoader implements CommandLineRunner {
                                 .points(0)
                                 .rating(0)
                                 .isNew(true)
-                                .build()
-                ));
+                                .build()));
 
         // 4) Problem 초기화
         if (problemRepository.count() == 0) {
             JsonNode desc = mapper.readTree(
-                    "{\"question\":\"반복문은?\",\"options\":[\"1. if문\",\"2. for문\"]}"
-            );
+                    "{\"question\":\"반복문은?\",\"options\":[\"1. if문\",\"2. for문\"]}");
             Problem p = Problem.builder()
                     .title("Test Problem")
                     .description(desc)
@@ -86,8 +83,29 @@ public class InitDataLoader implements CommandLineRunner {
         userRepository.findAll().stream()
                 .filter(u -> u.getCourseId() == 1)
                 .forEach(u -> {
-                    u.setCourseId(1L);  // 기본 코스 ID
+                    u.setCourseId(1L); // 기본 코스 ID
                     userRepository.save(u);
                 });
+
+        if (topicRepository.count() == 0) {
+            topicRepository.save(Topic.builder()
+                    .code("LOOP") // 고유 코드 값
+                    .name("반복문")
+                    .description("Loop 문에 대한 기본 문제 모음")
+                    .total(0)
+                    .build());
+            topicRepository.save(Topic.builder()
+                    .code("COND")
+                    .name("조건문")
+                    .description("조건문(if/switch) 문제 모음")
+                    .total(0)
+                    .build());
+            topicRepository.save(Topic.builder()
+                    .code("FUNC")
+                    .name("함수")
+                    .description("함수 정의 및 호출 문제 모음")
+                    .total(0)
+                    .build());
+        }
     }
 }
