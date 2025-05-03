@@ -21,6 +21,7 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
             "/db",
             "/submit",
             "/problem",
+            "/users",
             // swagger 관련
             "/v3/api-docs",
             "/swagger-ui",
