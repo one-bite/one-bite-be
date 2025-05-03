@@ -19,8 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProblemRequest {
 
-    @NotNull
-    private Long categoryId; // categoryId 변경
+    private Long categoryId;
 
     @NotNull
     private String title;

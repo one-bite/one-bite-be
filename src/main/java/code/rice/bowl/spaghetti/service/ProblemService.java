@@ -32,11 +32,10 @@ public class ProblemService {
 
     @Transactional
     public ProblemResponse create(ProblemRequest dto) {
-        // 1. Category 조회
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new InvalidRequestException("Category not found"));
+        Long catId = (dto.getCategoryId() != null) ? dto.getCategoryId() : 1L;
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new InvalidRequestException("Category not found: " + catId));
 
-        // 2. Topic code 목록 처리: 없는 코드는 자동 생성
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
@@ -44,7 +43,7 @@ public class ProblemService {
                         .orElseGet(() -> topicRepository.save(
                                 Topic.builder()
                                         .code(code)
-                                        .name(code)    // 초기엔 code를 name으로 설정
+                                        .name(code)
                                         .total(0)
                                         .build()
                         ));
@@ -52,14 +51,12 @@ public class ProblemService {
             }
         }
 
-        // 3. User 처리 (관리자 문제면 null)
         User user = null;
         if (dto.getUserId() != null) {
             user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
         }
 
-        // 4. Problem 저장
         Problem problem = ProblemMapper.toEntity(dto, category, topics, user);
         return ProblemMapper.toDto(problemRepository.save(problem));
     }
@@ -81,12 +78,11 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
 
-        // 1. Category
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new InvalidRequestException("Category not found"));
+        Long catId = (dto.getCategoryId() != null) ? dto.getCategoryId() : 1L;
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new InvalidRequestException("Category not found: " + catId));
         problem.setCategory(category);
 
-        // 2. Topic code 목록 처리
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
@@ -103,7 +99,6 @@ public class ProblemService {
         }
         problem.setTopics(topics);
 
-        // 3. User
         if (dto.getUserId() != null) {
             User user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
@@ -112,7 +107,6 @@ public class ProblemService {
             problem.setUser(null);
         }
 
-        // 4. 나머지 필드
         problem.setTitle(dto.getTitle());
         problem.setDescription(dto.getDescription());
         problem.setQuestionType(dto.getQuestionType());
