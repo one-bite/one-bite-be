@@ -1,14 +1,12 @@
 package code.rice.bowl.spaghetti.mapper;
 
 import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
-import code.rice.bowl.spaghetti.dto.ai.AiProblemRequest;
-import code.rice.bowl.spaghetti.dto.ai.AiProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Category;
 import code.rice.bowl.spaghetti.entity.Problem;
-import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
+// import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
 import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.entity.User;
@@ -30,23 +28,6 @@ public class ProblemMapper {
                 .hint(dto.getHint())
                 .answer(dto.getAnswer())
                 .point(dto.getPoint())
-                .build();
-    }
-
-    public static Problem toEntity(AiProblemResponse aiResDto, Topic topic) {
-        return Problem.builder()
-                .topic(topic)
-                // AI에서 받은 'problemContent'를 제목과 본문(description)에 동일하게 사용
-                .title(aiResDto.getProblemContent())
-                .description(aiResDto.getProblemContent())
-                // 문자열을 Enum으로 변환
-                .questionType(QuestionType.valueOf(aiResDto.getQuestionType().toUpperCase()))
-                .difficulty(DifficultyLevel.valueOf(aiResDto.getDifficulty().toUpperCase()))
-                // AI 응답 DTO에 hint, answer, features, score 필드가 없으므로 기본값 또는 null
-                .hint(null)
-                .answer(null)
-                .features(null)
-                .score(0)
                 .build();
     }
 
