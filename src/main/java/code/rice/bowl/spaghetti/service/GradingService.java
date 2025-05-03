@@ -31,10 +31,10 @@ public class GradingService {
 
         boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
 
-        int score = isCorrect ? problem.getScore() : 0;
+        int point = isCorrect ? problem.getPoint() : 0;
 
         if (isCorrect) {
-            user.addPoints(score);
+            user.addPoints(point);
             userRepository.save(user);
         }
 
@@ -53,7 +53,7 @@ public class GradingService {
                 .build();
         historyRepository.save(history);
 
-        return new SubmitResponse(isCorrect, score);
+        return new SubmitResponse(isCorrect, point);
     }
 
     //Trimming

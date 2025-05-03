@@ -1,11 +1,10 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
-import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
 import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * 용도
@@ -15,8 +14,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProblemRequest {
+
     @NotNull
-    private Long topicId;
+    private Long categoryId; // 기존 topicId -> categoryId로 변경
 
     @NotNull
     private String title;
@@ -25,13 +25,14 @@ public class ProblemRequest {
 
     private QuestionType questionType;
 
-    private DifficultyLevel difficulty;
-
     private String hint;
 
     private String answer;
 
-    private JsonNode features;
+    @NotNull
+    private int point = 10;
 
-    private int score;
+    private Long userId;
+
+    private Long[] topicIds;
 }
