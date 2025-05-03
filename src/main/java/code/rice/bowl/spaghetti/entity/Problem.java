@@ -1,5 +1,4 @@
 package code.rice.bowl.spaghetti.entity;
-
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
@@ -25,11 +24,14 @@ public class Problem {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    /**
+     * 다대다로 변경된 토픽 매핑
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "problem_topic",
             joinColumns = @JoinColumn(name = "problem_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_code")
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     @Builder.Default
     private List<Topic> topics = new ArrayList<>();

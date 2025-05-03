@@ -30,12 +30,17 @@ public class ProblemService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
+    /**
+     * 문제 추가
+     */
     @Transactional
     public ProblemResponse create(ProblemRequest dto) {
+        // 기본 카테고리 설정
         Long catId = (dto.getCategoryId() != null) ? dto.getCategoryId() : 1L;
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new InvalidRequestException("Category not found: " + catId));
 
+        // 토픽 처리: 코드로 조회 후 없으면 생성
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
@@ -51,54 +56,74 @@ public class ProblemService {
             }
         }
 
+        // 사용자 처리 (AI 문제면 userId null)
         User user = null;
         if (dto.getUserId() != null) {
             user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
         }
 
+        // 문제 저장
         Problem problem = ProblemMapper.toEntity(dto, category, topics, user);
-        return ProblemMapper.toDto(problemRepository.save(problem));
+        Problem saved = problemRepository.save(problem);
+
+        // 생성 후 카운트 업데이트
+        for (Topic topic : topics) {
+            topic.setTotal(topic.getTotal() + 1);
+            topicRepository.save(topic);
+        }
+        category.setTotal(category.getTotal() + 1);
+        categoryRepository.save(category);
+
+        return ProblemMapper.toDto(saved);
     }
 
+    /**
+     * 전체 문제 요약 조회
+     */
     public List<ProblemSimpleResponse> findAll() {
         return problemRepository.findAll().stream()
                 .map(ProblemMapper::toSimpleDto)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 단일 문제 조회
+     */
     public ProblemResponse findById(Long id) {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
         return ProblemMapper.toDto(problem);
     }
 
+    /**
+     * 문제 수정
+     */
     @Transactional
     public ProblemResponse update(Long id, ProblemRequest dto) {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
 
+        // 카테고리 업데이트
         Long catId = (dto.getCategoryId() != null) ? dto.getCategoryId() : 1L;
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new InvalidRequestException("Category not found: " + catId));
         problem.setCategory(category);
 
+        // 토픽 업데이트
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
                 Topic topic = topicRepository.findByCode(code)
                         .orElseGet(() -> topicRepository.save(
-                                Topic.builder()
-                                        .code(code)
-                                        .name(code)
-                                        .total(0)
-                                        .build()
+                                Topic.builder().code(code).name(code).total(0).build()
                         ));
                 topics.add(topic);
             }
         }
         problem.setTopics(topics);
 
+        // 사용자 업데이트
         if (dto.getUserId() != null) {
             User user = userRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new InvalidRequestException("User not found"));
@@ -107,6 +132,7 @@ public class ProblemService {
             problem.setUser(null);
         }
 
+        // 기타 필드 업데이트
         problem.setTitle(dto.getTitle());
         problem.setDescription(dto.getDescription());
         problem.setQuestionType(dto.getQuestionType());
@@ -114,10 +140,28 @@ public class ProblemService {
         problem.setAnswer(dto.getAnswer());
         problem.setPoint(dto.getPoint());
 
-        return ProblemMapper.toDto(problemRepository.save(problem));
+        Problem updated = problemRepository.save(problem);
+        return ProblemMapper.toDto(updated);
     }
 
+    /**
+     * 문제 삭제
+     */
+    @Transactional
     public void delete(Long id) {
-        problemRepository.deleteById(id);
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
+
+        // 삭제 전 카운트 감소
+        for (Topic topic : problem.getTopics()) {
+            topic.setTotal(topic.getTotal() - 1);
+            topicRepository.save(topic);
+        }
+        Category category = problem.getCategory();
+        category.setTotal(category.getTotal() - 1);
+        categoryRepository.save(category);
+
+        // 실제 삭제
+        problemRepository.delete(problem);
     }
 }
