@@ -2,9 +2,7 @@ package code.rice.bowl.spaghetti.controller;
 
 import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
-import code.rice.bowl.spaghetti.service.UserBadgeService;
-import code.rice.bowl.spaghetti.service.UserProgressService;
-import code.rice.bowl.spaghetti.service.UserService;
+import code.rice.bowl.spaghetti.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +19,8 @@ public class UserController {
     private final UserService userService;
     private final UserBadgeService userBadgeService;
     private final UserProgressService userProgressService;
+    private final TodayProblemService todayProblemService;
+    private final StreakService streakService;
 
     // 현재 로그인한 사용자가 자신의 정보를 요청할 때
     @GetMapping("")
@@ -38,6 +38,18 @@ public class UserController {
     @GetMapping("/topic-progress")
     public ResponseEntity<?> getTopicProgress(@AuthenticationPrincipal(expression = "username") String email) {
         return ResponseEntity.ok(userProgressService.getAllProgress(email));
+    }
+
+    // 사용자의 오늘의 문제 조회.
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayProblems(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(todayProblemService.getUserTodayProblems(email));
+    }
+
+    // 사용자의 스트릭 정보를 요청.
+    @GetMapping("/streak")
+    public ResponseEntity<?> getStreak(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(streakService.getStreak(email));
     }
 
     // 그 외 일반적으로 타인의 정보를 요청할 때 -> 나중에 필요할 듯.

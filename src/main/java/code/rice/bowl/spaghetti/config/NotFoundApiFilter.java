@@ -21,6 +21,7 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
             "/db",
             "/submit",
             "/problem",
+            "/users",
             // swagger 관련
             "/v3/api-docs",
             "/swagger-ui",
@@ -29,8 +30,8 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
             "/swagger-resources",
             "/webjars",
             // test 용도
-            "/test"
-    );
+            "/test",
+            "/ai");
 
     @Override
     protected void doFilterInternal(
@@ -54,7 +55,7 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
     }
 
     private boolean isAllowed(String path) {
-        for (String allow: allowSet) {
+        for (String allow : allowSet) {
             if (path.startsWith(allow))
                 return true;
         }

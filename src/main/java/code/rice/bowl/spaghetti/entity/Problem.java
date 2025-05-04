@@ -3,12 +3,10 @@ package code.rice.bowl.spaghetti.entity;
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,31 +17,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Problem {
 
-    @Getter
-    public enum DifficultyLevel {
-        EASY("초급"),
-        MEDIUM("중급"),
-        HARD("고급");
-
-        private final String koreanLabel;
-
-        DifficultyLevel(String koreanLabel) {
-            this.koreanLabel = koreanLabel;
-        }
-
-    }
-
-    public enum QuestionType {
-        multiple_choice, short_answer, true_false
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long problemId;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id")
-    private Topic topic;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "problem_topic",
+            joinColumns = @JoinColumn(name = "problem_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_code")
+    )
+    @Builder.Default
+    private List<Topic> topics = new ArrayList<>();
+
+    /**
+     * 문제를 생성한 사용자
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -54,17 +50,17 @@ public class Problem {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @Enumerated(EnumType.STRING)
-    private DifficultyLevel difficulty;
-
     private String hint;
 
     private String answer;
 
-    @Convert(converter = JsonNodeConverter.class)
-    private JsonNode features;
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 10")
+    @Builder.Default
+    private int point = 10;
 
-    // 문제 해결 시 추가되는 점수
-    @Column(nullable = false)
-    private int score;
+    public enum QuestionType {
+        multiple_choice,
+        short_answer,
+        true_false
+    }
 }

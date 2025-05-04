@@ -46,7 +46,8 @@ public class SecurityConfig {
             "/submit/**",
             "/problem/**",
             "/oauth/logout",
-            "/oauth/verify"
+            "/oauth/verify",
+            "/users/**"
     };
 
     private static final String[] PERMIT_ALL = {

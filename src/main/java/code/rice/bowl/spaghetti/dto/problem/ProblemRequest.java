@@ -1,11 +1,13 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
-import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
 import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
  * 용도
@@ -13,10 +15,11 @@ import lombok.NoArgsConstructor;
  * - 문제 수정 요청
  */
 @Getter
+@Setter
 @NoArgsConstructor
 public class ProblemRequest {
-    @NotNull
-    private Long topicId;
+
+    private Long categoryId;
 
     @NotNull
     private String title;
@@ -25,13 +28,15 @@ public class ProblemRequest {
 
     private QuestionType questionType;
 
-    private DifficultyLevel difficulty;
-
     private String hint;
 
     private String answer;
 
-    private JsonNode features;
+    @NotNull
+    private int point = 10;
 
-    private int score;
+    private Long userId;
+
+    // 숫자 ID 대신 문자열 코드 리스트 사용
+    private List<String> topicCodes;
 }
