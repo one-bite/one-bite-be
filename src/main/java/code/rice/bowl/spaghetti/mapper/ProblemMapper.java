@@ -6,6 +6,8 @@ import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Category;
 import code.rice.bowl.spaghetti.entity.Problem;
+// import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
+import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.entity.User;
 
