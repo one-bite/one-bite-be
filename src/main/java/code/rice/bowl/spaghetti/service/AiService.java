@@ -35,7 +35,7 @@ public class AiService {
     private final CategoryRepository categoryRepository;
     private final ProblemService problemService;
 
-    @Value("${ai.base.url}")
+    @Value("${ai.server.url}")
     private String aiBaseUrl;
 
     public ProblemResponse generateProblem(AiProblemRequest dto, Long ownerId, Long topicId, Long categoryId) {
