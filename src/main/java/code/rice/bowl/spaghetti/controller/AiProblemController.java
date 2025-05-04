@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import code.rice.bowl.spaghetti.dto.ai.AiProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.service.AiService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * AI 백엔드로 요청을 전달하는 컨트롤러
@@ -19,6 +20,7 @@ import code.rice.bowl.spaghetti.service.AiService;
 @RestController
 @RequestMapping("/ai")
 @RequiredArgsConstructor
+@Tag(name = "Ai-based")
 public class AiProblemController {
     private final AiService aiService;
 
