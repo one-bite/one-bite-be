@@ -1,61 +1,69 @@
 package code.rice.bowl.spaghetti.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import code.rice.bowl.spaghetti.dto.ai.AiProblemRequest;
 import code.rice.bowl.spaghetti.dto.ai.AiProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
-import code.rice.bowl.spaghetti.entity.Topic;
-import code.rice.bowl.spaghetti.entity.User;
-import code.rice.bowl.spaghetti.entity.Category;
 import code.rice.bowl.spaghetti.entity.Problem;
-import code.rice.bowl.spaghetti.exception.InvalidRequestException;
-import code.rice.bowl.spaghetti.mapper.ProblemMapper;
-import code.rice.bowl.spaghetti.repository.CategoryRepository;
-import code.rice.bowl.spaghetti.repository.TopicRepository;
-import code.rice.bowl.spaghetti.repository.UserRepository;
+import code.rice.bowl.spaghetti.exception.InternalServerError;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AiService {
-
     private final RestTemplate restTemplate;
-    private final UserRepository userRepo;
-    private final TopicRepository topicRepo;
-    private final CategoryRepository categoryRepository;
+    private final ObjectMapper objectMapper;
     private final ProblemService problemService;
+    private final ProblemRelationService problemRelationService;
 
     @Value("${ai.server.url}")
     private String aiBaseUrl;
 
-    public ProblemResponse generateProblem(AiProblemRequest dto, Long ownerId, Long topicId, Long categoryId) {
+    /**
+     * 오답 시 호출하여 AI 문제 생성 및 저장, 부모-자식 관계 기록 수행
+     * @param dto parentProblemId, description, topics, difficulty, questionType, userId, categoryId, count
+     */
+    public ProblemResponse generateProblem(AiProblemRequest dto) {
+        // 1) AI 서버 호출
+        AiProblemResponse aiResp = restTemplate.postForObject(
+                aiBaseUrl + "/generate-question", dto, AiProblemResponse.class);
+        if (aiResp == null) {
+            throw new InternalServerError("AI server returned null response");
+        }
 
-        userRepo.findById(ownerId)
-                .orElseThrow(() -> new InvalidRequestException("User not found"));
-        Topic topic = topicRepo.findById(topicId)
-                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
-        categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new InvalidRequestException("Topic not found"));
-        // ai api 호출
-        String url = aiBaseUrl + "/generate-question";
-        log.info("AI 호출 URL: {}", url);
+        // 2) AI 응답 → ProblemRequest 매핑
+        ProblemRequest req = new ProblemRequest();
+        req.setUserId(dto.getUserId());
+        req.setCategoryId(dto.getCategoryId());
+        req.setTopicCodes(List.of(dto.getTopics().toArray(new String[0])));
+        req.setTitle(aiResp.getTitle());
+        try {
+            JsonNode desc = objectMapper.readTree(dto.getDescription());
+            req.setDescription(desc);
+        } catch (JsonProcessingException e) {
+            throw new InternalServerError("Invalid description format");
+        }
+        req.setQuestionType(Problem.QuestionType.valueOf(dto.getQuestionType()));
+        req.setHint(aiResp.getHint());
+        req.setAnswer(aiResp.getAnswer());
+        req.setPoint(dto.getCount());
 
-        ProblemRequest problemReq = restTemplate.postForObject(url, dto, ProblemRequest.class);
+        // 3) 문제 저장
+        ProblemResponse saved = problemService.create(req);
 
-        problemReq.setUserId(ownerId);
-        problemReq.setCategoryId(categoryId);
-        problemReq.setTopicCodes(List.of(topic.getCode()));
+        // 4) 부모-자식 관계 기록
+        problemRelationService.createRelation(dto.getParentProblemId(), saved.getProblemId());
 
-        return problemService.create(problemReq);
+        return saved;
     }
 }
