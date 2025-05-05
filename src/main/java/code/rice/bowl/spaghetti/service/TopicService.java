@@ -38,6 +38,7 @@ public class TopicService {
     public TopicResponse update(Long id, TopicRequest dto) {
         Topic topic = getTopic(id);
 
+        topic.setCode(dto.getCode());     // 코드 업데이트
         topic.setName(dto.getName());
         topic.setDescription(dto.getDescription());
         topic.setTotal(dto.getTotal());

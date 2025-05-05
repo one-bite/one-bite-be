@@ -5,7 +5,6 @@ import code.rice.bowl.spaghetti.dto.rank.RankResponse;
 import code.rice.bowl.spaghetti.entity.Rank;
 
 
-
 public class RankMapper {
 
     public static RankRequest toDto(Rank user) {

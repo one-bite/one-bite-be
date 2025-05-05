@@ -8,6 +8,7 @@ public class TopicMapper {
 
     public static Topic toEntity(TopicRequest dto) {
         return Topic.builder()
+                .code(dto.getCode())        // 코드 매핑 추가
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .total(dto.getTotal())
@@ -17,6 +18,7 @@ public class TopicMapper {
     public static TopicResponse toDto(Topic topic) {
         return TopicResponse.builder()
                 .topicId(topic.getTopicId())
+                .code(topic.getCode())        // 코드 매핑 추가
                 .name(topic.getName())
                 .description(topic.getDescription())
                 .total(topic.getTotal())
