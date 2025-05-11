@@ -1,6 +1,8 @@
 package code.rice.bowl.spaghetti.entity;
 
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
+import code.rice.bowl.spaghetti.utils.QuestionType;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
@@ -58,9 +60,4 @@ public class Problem {
     @Builder.Default
     private int point = 10;
 
-    public enum QuestionType {
-        multiple_choice,
-        short_answer,
-        true_false
-    }
 }
