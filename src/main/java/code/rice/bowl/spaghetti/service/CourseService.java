@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.entity.Course;
+import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,4 +22,11 @@ public class CourseService {
     public Optional<Course> getCourseNullable(Long id) {
         return courseRepository.findById(id);
     }
+
+    public void addCourse(Problem problem) {
+        courseRepository.save(Course.builder()
+                        .problem(problem)
+                        .build());
+    }
+
 }
