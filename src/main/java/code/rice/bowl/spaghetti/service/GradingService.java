@@ -45,6 +45,7 @@ public class GradingService {
                 .equals(normalize(problem.getAnswer()));
         int point = isCorrect ? problem.getPoint() : 0;
 
+        // 1. 장답 체크.
         if (isCorrect) {
             user.addPoints(point);
             userRepository.save(user);

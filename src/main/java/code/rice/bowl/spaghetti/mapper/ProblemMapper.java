@@ -64,6 +64,8 @@ public class ProblemMapper {
                 .type(problem.getQuestionType())
                 .problemId(problem.getProblemId())
                 .description(problem.getDescription())
+                .answer(problem.getAnswer())
+                .point(problem.getPoint())
                 .build();
     }
 }
