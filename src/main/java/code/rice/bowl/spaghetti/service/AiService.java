@@ -6,6 +6,7 @@ import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.exception.InternalServerError;
+import code.rice.bowl.spaghetti.utils.QuestionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +54,7 @@ public class AiService {
         } catch (JsonProcessingException e) {
             throw new InternalServerError("Invalid description format");
         }
-        req.setQuestionType(Problem.QuestionType.valueOf(dto.getQuestionType()));
+        req.setQuestionType(QuestionType.valueOf(dto.getQuestionType()));
         req.setHint(aiResp.getHint());
         req.setAnswer(aiResp.getAnswer());
         req.setPoint(dto.getCount());

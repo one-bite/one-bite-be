@@ -61,7 +61,7 @@ public class ProblemMapper {
     public static ProblemDetailResponse toDetailDto(Problem problem) {
         return ProblemDetailResponse.builder()
                 .title(problem.getTitle())
-                .type(problem.getQuestionType())
+                .questionType(problem.getQuestionType())
                 .problemId(problem.getProblemId())
                 .description(problem.getDescription())
                 .answer(problem.getAnswer())
