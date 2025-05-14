@@ -21,6 +21,7 @@ public class UserController {
     private final UserProgressService userProgressService;
     private final TodayProblemService todayProblemService;
     private final StreakService streakService;
+    private final UserProblemHistoryService userProblemHistoryService;
 
     // 현재 로그인한 사용자가 자신의 정보를 요청할 때
     @GetMapping("")
@@ -50,6 +51,12 @@ public class UserController {
     @GetMapping("/streak")
     public ResponseEntity<?> getStreak(@AuthenticationPrincipal(expression = "username") String email) {
         return ResponseEntity.ok(streakService.getStreak(email));
+    }
+
+    // 사용자의 제출 기록을 요청.
+    @GetMapping("/history")
+    public ResponseEntity<?> getSubmitHistory(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(userProblemHistoryService.getHistoriesByUser(email));
     }
 
     // 그 외 일반적으로 타인의 정보를 요청할 때 -> 나중에 필요할 듯.

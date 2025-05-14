@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
-import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
+
+import code.rice.bowl.spaghetti.utils.QuestionType;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

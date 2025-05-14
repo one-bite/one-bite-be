@@ -29,6 +29,7 @@ public class ProblemService {
     private final TopicRepository topicRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final CourseService courseService;
 
     /**
      * 문제 추가
@@ -65,15 +66,13 @@ public class ProblemService {
 
         // 문제 저장
         Problem problem = ProblemMapper.toEntity(dto, category, topics, user);
+
         Problem saved = problemRepository.save(problem);
 
-        // 생성 후 카운트 업데이트
-        for (Topic topic : topics) {
-            topic.setTotal(topic.getTotal() + 1);
-            topicRepository.save(topic);
+        // 관리자가 만든 문제.
+        if (user == null) {
+            courseService.addCourse(saved);
         }
-        category.setTotal(category.getTotal() + 1);
-        categoryRepository.save(category);
 
         return ProblemMapper.toDto(saved);
     }

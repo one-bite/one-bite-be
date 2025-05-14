@@ -17,4 +17,6 @@ public class ProblemDetailResponse {
     QuestionType questionType;
     String title;
     JsonNode description;
+    String answer;
+    int point;
 }

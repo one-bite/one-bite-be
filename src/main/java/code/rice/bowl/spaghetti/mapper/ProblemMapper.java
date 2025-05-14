@@ -6,8 +6,6 @@ import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import code.rice.bowl.spaghetti.entity.Category;
 import code.rice.bowl.spaghetti.entity.Problem;
-// import code.rice.bowl.spaghetti.entity.Problem.DifficultyLevel;
-import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.entity.User;
 
@@ -63,8 +61,11 @@ public class ProblemMapper {
     public static ProblemDetailResponse toDetailDto(Problem problem) {
         return ProblemDetailResponse.builder()
                 .title(problem.getTitle())
+                .type(problem.getQuestionType())
                 .problemId(problem.getProblemId())
                 .description(problem.getDescription())
+                .answer(problem.getAnswer())
+                .point(problem.getPoint())
                 .build();
     }
 }

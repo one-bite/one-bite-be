@@ -15,9 +15,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserProblemHistoryService {
 
+    private final UserService userService;
+
     private final UserProblemHistoryRepository historyRepository;
 
-    public List<UserProblemHistoryResponse> getHistoriesByUserId(Long userId) {
+    /**
+     * 사용자 이메일 바탕으로 사용자 제출 기록 조회.
+     * @param email 사용자 이메일
+     * @return  제출 기록.
+     */
+    public List<UserProblemHistoryResponse> getHistoriesByUser(String email) {
+        return getHistoriesByUser(userService.getUser(email).getUserId());
+    }
+
+    /**
+     * 사용자 아이디 바탕으로 사요자 제출 기록 조회.
+     * @param userId 사용자 id
+     * @return  제출 기록.
+     */
+    public List<UserProblemHistoryResponse> getHistoriesByUser(Long userId) {
         return historyRepository.findByUserUserId(userId).stream()
                 .map(UserProblemHistoryMapper::toDto)
                 .collect(Collectors.toList());

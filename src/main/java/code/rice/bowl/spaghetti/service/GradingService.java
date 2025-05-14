@@ -49,7 +49,7 @@ public class GradingService {
         boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
         int point = isCorrect ? problem.getPoint() : 0;
 
-        // 4) 정답 시 포인트 및 제출 체크, 스트릭 처리
+        // 1. 장답 체크.
         if (isCorrect) {
             userEntity.addPoints(point);
             userRepository.save(userEntity);

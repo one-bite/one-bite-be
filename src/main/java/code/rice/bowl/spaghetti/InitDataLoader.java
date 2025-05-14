@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti;
 
 import code.rice.bowl.spaghetti.entity.*;
 import code.rice.bowl.spaghetti.repository.*;
+import code.rice.bowl.spaghetti.utils.QuestionType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ public class InitDataLoader implements CommandLineRunner {
                     .description(desc)
                     .answer("2")
                     .point(100)
-                    .questionType(Problem.QuestionType.multiple_choice)
+                    .questionType(QuestionType.MULTIPLE_CHOICE)
                     .category(defaultCat)
                     .user(testUser)
                     .build();
