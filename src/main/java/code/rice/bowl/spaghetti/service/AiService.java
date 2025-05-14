@@ -9,6 +9,8 @@ import code.rice.bowl.spaghetti.exception.InternalServerError;
 import code.rice.bowl.spaghetti.utils.QuestionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -66,5 +68,14 @@ public class AiService {
         problemRelationService.createRelation(dto.getParentProblemId(), saved.getProblemId());
 
         return saved;
+    }
+
+    /**
+     * 비동기 방식의 AI 문제 생성 메서드
+     */
+    @Async
+    public CompletableFuture<ProblemResponse> generateProblemAsync(AiProblemRequest dto) {
+        ProblemResponse response = generateProblem(dto);
+        return CompletableFuture.completedFuture(response);
     }
 }

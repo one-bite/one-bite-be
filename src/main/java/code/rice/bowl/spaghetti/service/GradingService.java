@@ -65,7 +65,7 @@ public class GradingService {
             aiReq.setUserId(userId);
             aiReq.setCategoryId(problem.getCategory().getCategoryId());
             aiReq.setCount(1);
-            aiService.generateProblem(aiReq);
+            aiService.generateProblemAsync(aiReq);
         }
 
         // 5) 이력 저장
