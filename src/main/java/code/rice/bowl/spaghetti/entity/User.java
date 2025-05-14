@@ -54,6 +54,10 @@ public class User {
     @Builder.Default
     private List<TodayProblem> todayProblems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<NotSolveProblem> notSolveAiProblems = new ArrayList<>();
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Setter(AccessLevel.NONE)
     private Streak streak;

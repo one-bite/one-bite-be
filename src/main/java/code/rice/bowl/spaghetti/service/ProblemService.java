@@ -29,6 +29,7 @@ public class ProblemService {
     private final TopicRepository topicRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final CourseService courseService;
 
     @Transactional
     public ProblemResponse create(ProblemRequest dto) {
@@ -58,7 +59,15 @@ public class ProblemService {
         }
 
         Problem problem = ProblemMapper.toEntity(dto, category, topics, user);
-        return ProblemMapper.toDto(problemRepository.save(problem));
+
+        Problem saved = problemRepository.save(problem);
+
+        // 관리자가 만든 문제.
+        if (user == null) {
+            courseService.addCourse(saved);
+        }
+
+        return ProblemMapper.toDto(saved);
     }
 
     public List<ProblemSimpleResponse> findAll() {
