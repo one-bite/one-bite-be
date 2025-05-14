@@ -25,6 +25,7 @@ public class ProblemMapper {
                 .questionType(dto.getQuestionType())
                 .hint(dto.getHint())
                 .answer(dto.getAnswer())
+                .commentary(dto.getCommentary())
                 .point(dto.getPoint())
                 .build();
     }
@@ -44,6 +45,7 @@ public class ProblemMapper {
                 .hint(problem.getHint())
                 .answer(problem.getAnswer())
                 .point(problem.getPoint())
+                .commentary(problem.getCommentary())
                 .categoryId(categoryId)
                 .userId(userId)
                 .topicNames(topicNames)

@@ -36,6 +36,8 @@ public class ProblemRequest {
     @NotNull
     private int point = 10;
 
+    private String commentary;
+
     private Long userId;
 
     // 숫자 ID 대신 문자열 코드 리스트 사용

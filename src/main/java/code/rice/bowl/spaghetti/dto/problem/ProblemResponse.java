@@ -26,5 +26,6 @@ public class ProblemResponse {
     private int point;
     private Long categoryId;
     private Long userId;
+    private String commentary;
     private List<String> topicNames;
 }

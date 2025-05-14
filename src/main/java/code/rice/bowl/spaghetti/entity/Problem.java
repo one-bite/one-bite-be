@@ -58,6 +58,9 @@ public class Problem {
 
     private String answer;
 
+    @Column(nullable = true)
+    private String commentary;
+
     @Column(nullable = false, columnDefinition = "INT DEFAULT 10")
     @Builder.Default
     private int point = 10;
