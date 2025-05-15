@@ -8,6 +8,7 @@ import code.rice.bowl.spaghetti.mapper.BadgeMapper;
 import code.rice.bowl.spaghetti.repository.BadgeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,9 @@ public class BadgeService {
 
     private final BadgeRepository badgeRepository;
 
+    /**
+     * 뱃지 객체 생성
+     */
     public BadgeResponse create(BadgeRequest dto) {
         Badge badge = BadgeMapper.toEntity(dto);
         return BadgeMapper.toDto(badgeRepository.save(badge));
@@ -32,7 +36,10 @@ public class BadgeService {
     public BadgeResponse findById(Long id) {
         return BadgeMapper.toDto(getBadge(id));
     }
-
+    
+    /**
+     * 뱃지 갯신
+     */
     public BadgeResponse update(Long id, BadgeRequest dto) {
         Badge badge = badgeRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Badge not found"));
@@ -45,6 +52,10 @@ public class BadgeService {
         return BadgeMapper.toDto(badgeRepository.save(badge));
     }
 
+    /**
+     * 뱃지 삭제
+     */
+    @Transactional
     public void delete(Long id) {
         badgeRepository.deleteById(id);
     }
