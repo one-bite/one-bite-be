@@ -25,9 +25,9 @@ public class UserBadgeService {
     /**
      * 사용자 뱃지 횟득 처리 함수. (TODO: 파라미터 아직 확정 X)
      */
-    public void ownBadges(String email, Badge badge) {
+    public void ownBadges(User user, Badge badge) {
         userBadgeRepository.save(UserBadge.builder()
-                        .user(userService.getUser(email))
+                        .user(user)
                         .badge(badge)
                         .build());
     }

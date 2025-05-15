@@ -36,7 +36,7 @@ public class BadgeService {
     public BadgeResponse findById(Long id) {
         return BadgeMapper.toDto(getBadge(id));
     }
-    
+
     /**
      * 뱃지 갯신
      */

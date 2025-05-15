@@ -19,9 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankService {
     private final RankRepository rankRepository;
+    
+    private final UserService userService;
 
     /**
-     * level db에 저장.
+     * Rank db에 저장.
      *
      * @param rankRequest 저장할 객체
      */
@@ -32,28 +34,28 @@ public class RankService {
                 rankRequest.getMinRating());
 
         if (dupRange) {
-            throw new InvalidRequestException("level : rating 범위 겹침.");
+            throw new InvalidRequestException("Rank : rating 범위 겹침.");
         }
 
         // 2. 이름 중복 확인.
         if (rankRepository.existsByName(rankRequest.getName())) {
-            throw new InvalidRequestException("level : 이름 중복.");
+            throw new InvalidRequestException("Rank : 이름 중복.");
         }
 
         // 3. db에 데이터 저장.
         try {
             rankRepository.save(RankMapper.dtoToEntity(rankRequest));
         } catch (DataIntegrityViolationException e) {
-            throw new InvalidRequestException("level : 이릉이 중복 됨.");
+            throw new InvalidRequestException("Rank : 이릉이 중복 됨.");
         } catch (Exception e) {
-            throw new InvalidRequestException("level : check your request.");
+            throw new InvalidRequestException("Rank : check your request.");
         }
     }
 
     /**
-     * level 데이터 수정.
+     * Rank 데이터 수정.
      *
-     * @param id        수정할 level id.
+     * @param id        수정할 Rank id.
      * @param rankRequest     수정 정보.
      */
     public void update(Long id, RankRequest rankRequest) {
@@ -67,9 +69,9 @@ public class RankService {
     }
 
     /**
-     * level 데이터 삭제
+     * Rank 데이터 삭제
      *
-     * @param id    삭제할 level id
+     * @param id    삭제할 Rank id
      */
     @Transactional
     public void delete(Long id) {
@@ -77,41 +79,41 @@ public class RankService {
     }
 
     /**
-     * 모든 level 객체 조회
+     * 모든 Rank 객체 조회
      *
-     * @return Level 객체에서 name, id 만 추출하여 전달.
+     * @return Rank 객체에서 name, id 만 추출하여 전달.
      */
     public List<RankSimpleResponse> selectAllSimple() {
         return rankRepository.findSimpleAll();
     }
 
     /**
-     * LevelResponse 객체 조회
+     * RankResponse 객체 조회
      *
-     * @param id    조회할 level id
-     * @return      조회한 level response
+     * @param id    조회할 Rank id
+     * @return      조회한 Rank response
      */
-    public RankResponse select(Long id) {
-        return RankMapper.dtoToLevelResponse(selectById(id));
+    public RankResponse selectRankResponse(Long id) {
+        return RankMapper.dtoToRankResponse(selectById(id));
     }
 
     /**
-     * Level 객체 조회
+     * Rank 객체 조회
      *
-     * @param id    조회할 level id
-     * @return      조회한 Level 객체
-     * @throws InvalidRequestException 유효하지 않는 level id 인 경우
+     * @param id    조회할 Rank id
+     * @return      조회한 Rank 객체
+     * @throws InvalidRequestException 유효하지 않는 Rank id 인 경우
      */
     private Rank selectById(Long id) {
         return rankRepository.findById(id)
-                .orElseThrow(() -> new InvalidRequestException("level: " + id + " is not exists."));
+                .orElseThrow(() -> new InvalidRequestException("Rank: " + id + " is not exists."));
     }
 
     /**
-     * 사용자의 rating 기준에 맞는 level 조회.
+     * 사용자의 rating 기준에 맞는 Rank 조회.
      *
      * @param rating    현재 사용자 rating
-     * @return          현재 사용자 level.
+     * @return          현재 사용자 Rank.
      */
     public Rank getUserRank(int rating) {
         return rankRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThan(0, 0)
