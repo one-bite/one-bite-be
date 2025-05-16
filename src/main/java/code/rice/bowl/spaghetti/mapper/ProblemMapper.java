@@ -66,6 +66,7 @@ public class ProblemMapper {
                 .description(problem.getDescription())
                 .answer(problem.getAnswer())
                 .point(problem.getPoint())
+                .isAI(problem.getUser() != null)
                 .build();
     }
 }

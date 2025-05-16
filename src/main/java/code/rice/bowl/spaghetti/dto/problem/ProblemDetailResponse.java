@@ -19,4 +19,5 @@ public class ProblemDetailResponse {
     JsonNode description;
     String answer;
     int point;
+    boolean isAI;
 }
