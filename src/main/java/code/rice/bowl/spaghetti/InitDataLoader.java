@@ -63,7 +63,6 @@ public class InitDataLoader implements CommandLineRunner {
                     .point(100)
                     .questionType(QuestionType.MULTIPLE_CHOICE)
                     .category(defaultCat)
-                    .user(testUser)
                     .build();
             problemRepository.save(p);
 
