@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class SubmitRequest {
-    private Long userId;
+    private Long problemId;
     private String answer;
     private int solveTime;
 }
