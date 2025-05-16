@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.controller;
 import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/users")
+@Tag(name = "About User")
 @RequiredArgsConstructor
 public class UserController {
 

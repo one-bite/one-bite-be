@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
@@ -81,6 +82,12 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
         return ProblemMapper.toDto(problem);
+    }
+
+    public ProblemDetailResponse getProblemDetail(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
+        return ProblemMapper.toDetailDto(problem);
     }
 
     @Transactional
