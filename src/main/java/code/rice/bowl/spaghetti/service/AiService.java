@@ -1,11 +1,16 @@
 package code.rice.bowl.spaghetti.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import org.checkerframework.checker.units.qual.t;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 
 import code.rice.bowl.spaghetti.dto.ai.AiProblemRequest;
 import code.rice.bowl.spaghetti.dto.ai.AiProblemResponse;
@@ -49,13 +54,30 @@ public class AiService {
         // ai api 호출
         String url = aiBaseUrl + "/generate-question";
         log.info("AI 호출 URL: {}", url);
+        try {
+            ProblemRequest problemReq = restTemplate.postForObject(url, dto, ProblemRequest.class);
 
-        ProblemRequest problemReq = restTemplate.postForObject(url, dto, ProblemRequest.class);
+            if (problemReq == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "서버 응답이 없습니다");
+            }
+            problemReq.setUserId(ownerId);
+            problemReq.setCategoryId(categoryId);
+            problemReq.setTopicCodes(List.of(topic.getCode()));
 
-        problemReq.setUserId(ownerId);
-        problemReq.setCategoryId(categoryId);
-        problemReq.setTopicCodes(List.of(topic.getCode()));
+            return problemService.create(problemReq);
+        } catch (HttpClientErrorException.NotFound ex) {
+            // 404
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "AI 서버에서 해당 리소스를 찾을 수 없습니다", ex);
+        } catch (HttpClientErrorException.BadRequest ex) {
+            // 400
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 AI 요청 파라미터", ex);
+        } catch (HttpClientErrorException ex) {
+            // 그 외 4xx
+            throw new ResponseStatusException(ex.getStatusCode(), "AI 서버 오류: " + ex.getResponseBodyAsString(), ex);
+        } catch (RestClientException ex) {
+            // 네트워크 오류
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "AI 서버 호출 실패", ex);
+        }
 
-        return problemService.create(problemReq);
     }
 }
