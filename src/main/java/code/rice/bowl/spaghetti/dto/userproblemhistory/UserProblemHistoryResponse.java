@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.dto.userproblemhistory;
 
+import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 public class UserProblemHistoryResponse {
     private Long historyId;
     private Long userId;
-    private Long problemId;
+    private ProblemSimpleResponse problem;
     private String submittedAnswer;
     private Boolean isCorrect;
     private Integer solveTime;

@@ -54,7 +54,7 @@ public class ProblemMapper {
         return ProblemSimpleResponse.builder()
                 .problemId(problem.getProblemId())
                 .title(problem.getTitle())
-                .score(problem.getPoint())
+                .topics(problem.getTopics())
                 .build();
     }
 
