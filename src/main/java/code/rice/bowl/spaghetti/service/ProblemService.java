@@ -40,6 +40,7 @@ public class ProblemService {
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
+                // 없는 토픽의 경우 자동으로 생성하여 저장.
                 Topic topic = topicRepository.findByCode(code)
                         .orElseGet(() -> topicRepository.save(
                                 Topic.builder()
