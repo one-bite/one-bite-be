@@ -19,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankService {
     private final RankRepository rankRepository;
-    
-    private final UserService userService;
 
     /**
      * Rank db에 저장.
