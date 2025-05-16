@@ -25,14 +25,14 @@ public class TodayProblemService {
     private final CourseService courseService;
 
     // 오늘의 문제로 코스 문제와 AI 문제 개수 설정.
-    private final static long COURSE_PROBLEM_CNT = 1;
+    private final static long COURSE_PROBLEM_CNT = 10;
     private final static long AI_PROBLEM_CNT = 3;
 
     /**
      * 오늘 문제에 대하여 제출 여부를 설정함.
      *
-     * @param userId        사용자 id.
-     * @param problemId     오늘 해결한 문제 id.
+     * @param userId    사용자 id.
+     * @param problemId 오늘 해결한 문제 id.
      */
     @Transactional
     public void setSubmit(Long userId, Long problemId) {
@@ -51,13 +51,14 @@ public class TodayProblemService {
             todayProblem.getUser().getNotSolveAiProblems().removeIf(c -> c.getProblem().equals(p));
         }
 
-//        todayProblemRepository.save(todayProblem);
+        // todayProblemRepository.save(todayProblem);
     }
 
     /**
      * 사용자의 오늘 풀어할 문제들을 반환. (없는 경우 -> 생성)
+     * 
      * @param email 사용자 이메일
-     * @return  풀어야 하는 문제 리스트및 풀이 여부.
+     * @return 풀어야 하는 문제 리스트및 풀이 여부.
      */
     public UserTodayProblemResponse getUserTodayProblems(String email) {
         User now = userService.getUser(email);
@@ -79,7 +80,7 @@ public class TodayProblemService {
         List<Boolean> isSolved = new ArrayList<>();
         List<ProblemDetailResponse> problems = new ArrayList<>();
 
-        for (TodayProblem tp: todayProblems) {
+        for (TodayProblem tp : todayProblems) {
             isSolved.add(tp.isSubmitYN());
             problems.add(ProblemMapper.toDetailDto(tp.getProblem()));
         }
@@ -92,8 +93,9 @@ public class TodayProblemService {
 
     /**
      * 오늘의 문제에 대하여 모두 해결 여부를 나타냄.
-     * @param userId    사용자 id
-     * @return  true (모든 문제에 대한 제출 기록 존재), false (한 문제이라도 제출 기록이 없음)
+     * 
+     * @param userId 사용자 id
+     * @return true (모든 문제에 대한 제출 기록 존재), false (한 문제이라도 제출 기록이 없음)
      */
     @Transactional
     public boolean allSolve(Long userId) {
@@ -107,7 +109,7 @@ public class TodayProblemService {
         List<TodayProblem> problems = user.getTodayProblems();
 
         // 한 문제이라도 제출 기록이 없으면 false.
-        for (TodayProblem t: problems) {
+        for (TodayProblem t : problems) {
             if (!t.isSubmitYN()) {
                 return false;
             }
