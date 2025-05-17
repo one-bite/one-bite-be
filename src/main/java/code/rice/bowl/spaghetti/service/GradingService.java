@@ -19,6 +19,7 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class GradingService {
+
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
     private final UserProblemHistoryRepository historyRepository;
@@ -27,57 +28,53 @@ public class GradingService {
     private final AiService aiService;
     private final UserService userService;
 
-
     /**
      * 문제 채점 및 오답 시 AI 문제 자동 생성
      */
     @Transactional
     public SubmitResponse gradeTodayProblem(String email, SubmitRequest request) {
+        // 1. 오늘의 문제에 포함되어 있는지 확인
         boolean assigned = todayProblemService
                 .getUserTodayProblems(email)
                 .getProblemList().stream()
                 .anyMatch(p -> p.getProblemId().equals(request.getProblemId()));
 
         if (!assigned) {
-            // 오늘 할당된 TodayProblem 아닐 때
             throw new NotFoundException("This problem is not assigned for Today");
         }
 
+        // 2. 사용자 및 문제 조회
         User user = userService.getUser(email);
-
         Problem problem = problemRepository.findById(request.getProblemId())
-                .orElseThrow(() -> new NotFoundException("cannot find a problem"));
+                .orElseThrow(() -> new NotFoundException("Cannot find a problem"));
 
+        // 3. 정답 여부 판단
         boolean isCorrect = normalize(request.getAnswer())
                 .equals(normalize(problem.getAnswer()));
         int point = isCorrect ? problem.getPoint() : 0;
 
-        // 1. 장답 체크.
+        // 4. 정답 처리
         if (isCorrect) {
-            userEntity.addPoints(point);
-            userRepository.save(userEntity);
-            todayProblemService.setSubmit(userId, problemId);
-            streakService.updateStreak(userId);
+            user.addPoints(point);
+            userRepository.save(user);
         } else {
-            // 오답 시 AI 문제 생성 (내일 할당)
+            // 5. 오답일 경우 AI 문제 생성 요청
             AiProblemRequest aiReq = new AiProblemRequest();
-            aiReq.setParentProblemId(problemId);
+            aiReq.setParentProblemId(problem.getProblemId());
             aiReq.setDescription(problem.getDescription().toString());
             aiReq.setTopics(Collections.singletonList(problem.getTopics().get(0).getCode()));
             aiReq.setQuestionType(problem.getQuestionType().name());
-            aiReq.setUserId(userId);
+            aiReq.setUserId(user.getUserId());
             aiReq.setCategoryId(problem.getCategory().getCategoryId());
             aiReq.setCount(1);
             aiService.generateProblemAsync(aiReq);
         }
 
-        // 2. 제출 체크
+        // 6. 제출 여부 저장 및 스트릭 업데이트
         todayProblemService.setSubmit(user.getUserId(), problem.getProblemId());
-
-        // 3. 스트릭 업데이트
         streakService.updateStreak(user.getUserId());
 
-        // 4. 이력 저장
+        // 7. 이력 저장
         UserProblemHistory history = UserProblemHistory.builder()
                 .user(user)
                 .problem(problem)
