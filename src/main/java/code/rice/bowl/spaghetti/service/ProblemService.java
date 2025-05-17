@@ -90,6 +90,10 @@ public class ProblemService {
         return ProblemMapper.toDetailDto(problem);
     }
 
+    public long totalProblem() {
+        return problemRepository.count();
+    }
+
     @Transactional
     public ProblemResponse update(Long id, ProblemRequest dto) {
         Problem problem = problemRepository.findById(id)
