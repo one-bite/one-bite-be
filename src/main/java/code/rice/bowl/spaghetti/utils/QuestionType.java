@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public enum QuestionType {
     MULTIPLE_CHOICE("multiple_choice"),
     SHORT_ANSWER("short_answer"),
-    TURE_FALSE("ture_false");
+    TRUE_FALSE("true_false");
 
     @JsonValue
     private final String value;

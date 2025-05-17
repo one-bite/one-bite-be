@@ -25,7 +25,7 @@ public class TodayProblemService {
     private final CourseService courseService;
 
     // 오늘의 문제로 코스 문제와 AI 문제 개수 설정.
-    private final static long COURSE_PROBLEM_CNT = 1;
+    private final static long COURSE_PROBLEM_CNT = 10;
     private final static long AI_PROBLEM_CNT = 3;
 
     /**

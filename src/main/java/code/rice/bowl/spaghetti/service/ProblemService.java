@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
@@ -45,6 +46,7 @@ public class ProblemService {
         List<Topic> topics = new ArrayList<>();
         if (dto.getTopicCodes() != null) {
             for (String code : dto.getTopicCodes()) {
+                // 없는 토픽의 경우 자동으로 생성하여 저장.
                 Topic topic = topicRepository.findByCode(code)
                         .orElseGet(() -> topicRepository.save(
                                 Topic.builder()
@@ -95,9 +97,12 @@ public class ProblemService {
         return ProblemMapper.toDto(problem);
     }
 
-    /**
-     * 문제 수정
-     */
+    public ProblemDetailResponse getProblemDetail(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
+        return ProblemMapper.toDetailDto(problem);
+    }
+
     @Transactional
     public ProblemResponse update(Long id, ProblemRequest dto) {
         Problem problem = problemRepository.findById(id)

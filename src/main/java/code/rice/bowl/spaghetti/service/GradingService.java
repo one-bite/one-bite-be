@@ -1,7 +1,7 @@
-// src/main/java/code/rice/bowl/spaghetti/service/GradingService.java
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.ai.AiProblemRequest;
+import code.rice.bowl.spaghetti.dto.request.SubmitRequest;
 import code.rice.bowl.spaghetti.dto.response.SubmitResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.User;
@@ -25,28 +25,31 @@ public class GradingService {
     private final StreakService streakService;
     private final TodayProblemService todayProblemService;
     private final AiService aiService;
+    private final UserService userService;
+
 
     /**
      * 문제 채점 및 오답 시 AI 문제 자동 생성
      */
     @Transactional
-    public SubmitResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
-        // 1) 오늘 할당된 문제인지 검증
-        User userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        boolean assigned = todayProblemService.getUserTodayProblems(userEntity.getEmail())
+    public SubmitResponse gradeTodayProblem(String email, SubmitRequest request) {
+        boolean assigned = todayProblemService
+                .getUserTodayProblems(email)
                 .getProblemList().stream()
-                .anyMatch(p -> p.getProblemId().equals(problemId));
+                .anyMatch(p -> p.getProblemId().equals(request.getProblemId()));
+
         if (!assigned) {
+            // 오늘 할당된 TodayProblem 아닐 때
             throw new NotFoundException("This problem is not assigned for Today");
         }
 
-        // 2) 사용자, 문제 조회
-        Problem problem = problemRepository.findById(problemId)
-                .orElseThrow(() -> new NotFoundException("Problem not found"));
+        User user = userService.getUser(email);
 
-        // 3) 정답 체크
-        boolean isCorrect = normalize(submittedAnswer).equals(normalize(problem.getAnswer()));
+        Problem problem = problemRepository.findById(request.getProblemId())
+                .orElseThrow(() -> new NotFoundException("cannot find a problem"));
+
+        boolean isCorrect = normalize(request.getAnswer())
+                .equals(normalize(problem.getAnswer()));
         int point = isCorrect ? problem.getPoint() : 0;
 
         // 1. 장답 체크.
@@ -68,14 +71,21 @@ public class GradingService {
             aiService.generateProblemAsync(aiReq);
         }
 
-        // 5) 이력 저장
-        historyRepository.save(UserProblemHistory.builder()
-                .user(userEntity)
+        // 2. 제출 체크
+        todayProblemService.setSubmit(user.getUserId(), problem.getProblemId());
+
+        // 3. 스트릭 업데이트
+        streakService.updateStreak(user.getUserId());
+
+        // 4. 이력 저장
+        UserProblemHistory history = UserProblemHistory.builder()
+                .user(user)
                 .problem(problem)
-                .submittedAnswer(submittedAnswer)
+                .submittedAnswer(request.getAnswer())
                 .isCorrect(isCorrect)
-                .solveTime(solveTime)
-                .build());
+                .solveTime(request.getSolveTime())
+                .build();
+        historyRepository.save(history);
 
         return new SubmitResponse(isCorrect, point);
     }

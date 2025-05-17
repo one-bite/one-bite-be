@@ -56,7 +56,7 @@ public class ProblemMapper {
         return ProblemSimpleResponse.builder()
                 .problemId(problem.getProblemId())
                 .title(problem.getTitle())
-                .score(problem.getPoint())
+                .topics(problem.getTopics())
                 .build();
     }
 
@@ -68,6 +68,7 @@ public class ProblemMapper {
                 .description(problem.getDescription())
                 .answer(problem.getAnswer())
                 .point(problem.getPoint())
+                .isAI(problem.getUser() != null)
                 .build();
     }
 }

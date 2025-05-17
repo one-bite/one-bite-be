@@ -24,7 +24,7 @@ public class User {
     private String email;
 
     // 초기에는 이메일에서 이메일 ID로 설정.
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
     private int rating;
