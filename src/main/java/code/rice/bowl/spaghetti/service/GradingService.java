@@ -67,7 +67,7 @@ public class GradingService {
             aiReq.setUserId(user.getUserId());
             aiReq.setCategoryId(problem.getCategory().getCategoryId());
             aiReq.setCount(1);
-            aiService.generateProblemAsync(aiReq);
+            aiService.generateProblemRequestAsync(aiReq);
         }
 
         // 6. 제출 여부 저장 및 스트릭 업데이트

@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.controller;
 
+import code.rice.bowl.spaghetti.dto.problem.CommentaryResponse;
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.ChallengeService;
@@ -23,6 +24,12 @@ public class ProblemController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProblemDetail(@PathVariable Long id) {
         return ResponseEntity.ok(problemService.getProblemDetail(id));
+    }
+
+    @GetMapping("/{id}/commentary")
+    public ResponseEntity<CommentaryResponse> getCommentary(@PathVariable Long id) {
+        String commentary = problemService.getOrGenerateCommentary(id);
+        return ResponseEntity.ok(new CommentaryResponse(id, commentary));
     }
 
     @GetMapping("/challenge")

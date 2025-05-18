@@ -31,6 +31,7 @@ public class ProblemService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final CourseService courseService;
+    private final AiService aiService;
 
     /**
      * 문제 추가
@@ -172,4 +173,24 @@ public class ProblemService {
         // 실제 삭제
         problemRepository.delete(problem);
     }
+
+    @Transactional
+    public String getOrGenerateCommentary(Long problemId) {
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new InvalidRequestException("문제를 찾을 수 없습니다."));
+
+        if (problem.getCommentary() != null && !problem.getCommentary().isBlank()) {
+            return problem.getCommentary();
+        }
+
+        // AI에게 해설 요청
+        String generatedCommentary = aiService.generateCommentary(problem);
+
+        // 저장
+        problem.setCommentary(generatedCommentary);
+        problemRepository.save(problem);
+
+        return generatedCommentary;
+    }
+
 }
