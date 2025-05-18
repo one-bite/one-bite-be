@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ChallengeResponse {
+public class ChallengeProblemResponse {
     int leftChance;
     int score;
     ProblemDetailResponse problem;

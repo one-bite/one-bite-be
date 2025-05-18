@@ -1,17 +1,17 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.ChallengeDto;
-import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
-import code.rice.bowl.spaghetti.dto.response.ChallengeResponse;
+import code.rice.bowl.spaghetti.dto.request.SubmitRequest;
+import code.rice.bowl.spaghetti.dto.response.ChallengeProblemResponse;
+import code.rice.bowl.spaghetti.dto.response.ChallengeSubmitResponse;
+import code.rice.bowl.spaghetti.dto.response.SubmitResponse;
+import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class ChallengeService {
     private static final int HP = 3;
     private static final String USER_KEY_PREFIX = "user-";
 
-    public ChallengeResponse startChallenge(String email) {
+    public ChallengeProblemResponse startChallenge(String email) {
 
         // 0. 사용자 정보 조회.
         User user = userService.getUser(email);
@@ -72,7 +72,7 @@ public class ChallengeService {
         }
 
         // 5. 문제 및 상태 반환.
-        return ChallengeResponse.builder()
+        return ChallengeProblemResponse.builder()
                 .leftChance(nowUser.getHp())
                 .score(nowUser.getScore())
                 .problem(problemService.getProblemDetail(toSolve))
@@ -80,4 +80,55 @@ public class ChallengeService {
     }
 
 
+    public ChallengeSubmitResponse challengeGrading(String email, SubmitRequest request) {
+        // 0. 사용자 정보 조회.
+        User user = userService.getUser(email);
+        String userKey = USER_KEY_PREFIX + user.getEmail();
+
+        // 1. 사용자 존재 여부 확인.
+        if (!redisService.hasKey(userKey)) {
+            throw new InvalidRequestException("You are currently not in Challenge Mode.");
+        }
+
+        // 2. 문제 정보 조회
+        Problem problem = problemService.getProblem(request.getProblemId());
+
+        // 3. 현재 챌린지 상태 정보 조회 및 문제 풀이 기록..
+        ChallengeDto nowUser = ChallengeDto.fromString(redisService.getValue(userKey));
+        nowUser.getSolved().add(problem.getProblemId());
+
+        // 4. 장답 체크.
+        boolean isCorrect = normalize(request.getAnswer())
+                .equals(normalize(problem.getAnswer()));
+
+        if (isCorrect) {
+            nowUser.setScore(nowUser.getScore() + problem.getPoint());
+        } else {
+            nowUser.setHp(nowUser.getHp() - 1);
+        }
+
+        // 5. 종료 여부 체크
+        if (nowUser.getHp() <= 0) {
+            // TODO: 점수 정산 및 뱃지 부여 코드 추가.
+
+            redisService.delete(userKey);
+
+            return ChallengeSubmitResponse.builder()
+                    .correct(isCorrect)
+                    .score(nowUser.getScore())
+                    .gameOver(true)
+                    .build();
+        }
+
+        return ChallengeSubmitResponse.builder()
+                .correct(isCorrect)
+                .score(nowUser.getScore())
+                .gameOver(false)
+                .build();
+
+    }
+
+    private String normalize(String str) {
+        return str == null ? "" : str.trim().toLowerCase();
+    }
 }
