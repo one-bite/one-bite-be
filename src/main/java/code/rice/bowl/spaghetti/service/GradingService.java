@@ -1,5 +1,6 @@
 package code.rice.bowl.spaghetti.service;
 
+import code.rice.bowl.spaghetti.dto.request.SubmitRequest;
 import code.rice.bowl.spaghetti.dto.response.SubmitResponse;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.User;
@@ -22,26 +23,27 @@ public class GradingService {
 
     private final StreakService streakService;
     private final TodayProblemService todayProblemService;
+    private final UserService userService;
+
 
     @Transactional
-    public SubmitResponse grade(Long problemId, Long userId, String submittedAnswer, int solveTime) {
+    public SubmitResponse gradeTodayProblem(String email, SubmitRequest request) {
         boolean assigned = todayProblemService
-                .getUserTodayProblems(userRepository.findById(userId)
-                        .orElseThrow(() -> new NotFoundException("User not found"))
-                        .getEmail())
+                .getUserTodayProblems(email)
                 .getProblemList().stream()
-                .anyMatch(p -> p.getProblemId().equals(problemId));
+                .anyMatch(p -> p.getProblemId().equals(request.getProblemId()));
+
         if (!assigned) {
-            // 오늘 할당된 TodayProblem이 아닐 때
+            // 오늘 할당된 TodayProblem 아닐 때
             throw new NotFoundException("This problem is not assigned for Today");
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("cannot find a specific user"));
-        Problem problem = problemRepository.findById(problemId)
+        User user = userService.getUser(email);
+
+        Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new NotFoundException("cannot find a problem"));
 
-        boolean isCorrect = normalize(submittedAnswer)
+        boolean isCorrect = normalize(request.getAnswer())
                 .equals(normalize(problem.getAnswer()));
         int point = isCorrect ? problem.getPoint() : 0;
 
@@ -52,18 +54,18 @@ public class GradingService {
         }
 
         // 2. 제출 체크
-        todayProblemService.setSubmit(userId, problemId);
+        todayProblemService.setSubmit(user.getUserId(), problem.getProblemId());
 
         // 3. 스트릭 업데이트
-        streakService.updateStreak(userId);
+        streakService.updateStreak(user.getUserId());
 
         // 4. 이력 저장
         UserProblemHistory history = UserProblemHistory.builder()
                 .user(user)
                 .problem(problem)
-                .submittedAnswer(submittedAnswer)
+                .submittedAnswer(request.getAnswer())
                 .isCorrect(isCorrect)
-                .solveTime(solveTime)
+                .solveTime(request.getSolveTime())
                 .build();
         historyRepository.save(history);
 

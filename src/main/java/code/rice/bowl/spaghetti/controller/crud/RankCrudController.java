@@ -56,7 +56,7 @@ public class RankCrudController {
 
     @GetMapping("/{id}")
     ResponseEntity<?> select(@PathVariable Long id) {
-        return ResponseEntity.ok(rankService.select(id));
+        return ResponseEntity.ok(rankService.selectRankResponse(id));
     }
 
 

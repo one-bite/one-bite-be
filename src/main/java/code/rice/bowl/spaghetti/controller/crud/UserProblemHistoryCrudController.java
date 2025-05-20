@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/db/history")
 @RequiredArgsConstructor
-@Tag(name = "UserProblemHistory")
+@Tag(name = "CRUD: UserProblemHistory")
 public class UserProblemHistoryCrudController {
 
     private final UserProblemHistoryService historyService;

@@ -23,7 +23,7 @@ public class RankMapper {
                 .build();
     }
 
-    public static RankResponse dtoToLevelResponse(Rank rank) {
+    public static RankResponse dtoToRankResponse(Rank rank) {
         return RankResponse.builder()
                 .id(rank.getRankId())
                 .name(rank.getName())
