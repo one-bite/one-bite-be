@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.user.UserCurrentResponse;
+import code.rice.bowl.spaghetti.dto.user.UserRankResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -87,6 +88,18 @@ public class UserService {
 
             return newUser;
         }
+    }
+
+    /**
+     * 사용자의 랭크 정보 조회
+     */
+    public UserRankResponse getUserRank(String email) {
+        User now = getUser(email);
+
+        return UserRankResponse.builder()
+                .name(now.getRank().getName())
+                .point(now.getRating())
+                .build();
     }
 
     /**
