@@ -31,7 +31,6 @@ public class InitDataLoader implements CommandLineRunner {
                     .maxRating(100)
                     .build());
         }
-
         // 2) Category 초기화
         if (categoryRepository.count() == 0) {
             categoryRepository.save(
