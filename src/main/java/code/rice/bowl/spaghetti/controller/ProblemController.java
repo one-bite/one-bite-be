@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.controller;
 
 import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
+import code.rice.bowl.spaghetti.dto.request.SubmitRequest;
 import code.rice.bowl.spaghetti.dto.response.SimpleOkResponse;
 import code.rice.bowl.spaghetti.service.ChallengeService;
 import code.rice.bowl.spaghetti.service.ProblemService;
@@ -31,7 +32,10 @@ public class ProblemController {
     }
 
     @PostMapping("/challenge")
-    public ResponseEntity<?> submitChallenge(@AuthenticationPrincipal(expression = "username") String email) {
-        return ResponseEntity.ok(new SimpleOkResponse("ok"));
+    public ResponseEntity<?> submitChallenge(
+            @AuthenticationPrincipal(expression = "username") String email,
+            @RequestBody SubmitRequest request
+    ) {
+        return ResponseEntity.ok(challengeService.challengeGrading(email, request));
     }
 }
