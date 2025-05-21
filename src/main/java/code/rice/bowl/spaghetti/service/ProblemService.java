@@ -1,19 +1,13 @@
 package code.rice.bowl.spaghetti.service;
 
-import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
-import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
-import code.rice.bowl.spaghetti.dto.problem.ProblemResponse;
-import code.rice.bowl.spaghetti.dto.problem.ProblemSimpleResponse;
+import code.rice.bowl.spaghetti.dto.problem.*;
 import code.rice.bowl.spaghetti.entity.Category;
 import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.entity.Topic;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.ProblemMapper;
-import code.rice.bowl.spaghetti.repository.CategoryRepository;
-import code.rice.bowl.spaghetti.repository.ProblemRepository;
-import code.rice.bowl.spaghetti.repository.TopicRepository;
-import code.rice.bowl.spaghetti.repository.UserRepository;
+import code.rice.bowl.spaghetti.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +25,8 @@ public class ProblemService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final CourseService courseService;
+    private final UserProblemHistoryRepository historyRepository;
+    private final AuthService authService;
     private final AiService aiService;
 
     /**
@@ -193,4 +189,10 @@ public class ProblemService {
         return generatedCommentary;
     }
 
+    public ProblemStatsResponse getMyProblemStats() {
+        Long userId = authService.getCurrentUserId();
+        long total  = problemRepository.countByUserIsNull();
+        long solved = historyRepository.countByUserUserIdAndProblemUserIsNull(userId);
+        return new ProblemStatsResponse(total, solved);
+    }
 }
