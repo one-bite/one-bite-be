@@ -61,6 +61,11 @@ public class UserController {
         return ResponseEntity.ok(userProblemHistoryService.getHistoriesByUser(email));
     }
 
+    @GetMapping("/rank")
+    public ResponseEntity<?> getUserRank(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(userService.getUserRank(email));
+    }
+
     // 그 외 일반적으로 타인의 정보를 요청할 때 -> 나중에 필요할 듯.
 //    @GetMapping("/{email}")
 //    public ResponseEntity<?> getOtherInfo(@PathVariable String email) {
