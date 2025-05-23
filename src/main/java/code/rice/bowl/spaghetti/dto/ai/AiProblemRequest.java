@@ -32,7 +32,4 @@ public class AiProblemRequest {
 
     @NotNull
     private Long categoryId;       // 카테고리 ID
-
-    @NotNull
-    private int count;             // 생성할 문제 수
 }

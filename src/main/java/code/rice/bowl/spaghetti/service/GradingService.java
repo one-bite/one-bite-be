@@ -66,7 +66,6 @@ public class GradingService {
             aiReq.setQuestionType(problem.getQuestionType().name());
             aiReq.setUserId(user.getUserId());
             aiReq.setCategoryId(problem.getCategory().getCategoryId());
-            aiReq.setCount(1);
             aiService.generateProblemRequestAsync(aiReq);
         }
 

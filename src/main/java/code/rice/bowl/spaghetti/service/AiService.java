@@ -66,7 +66,7 @@ public class AiService {
         req.setQuestionType(QuestionType.valueOf(dto.getQuestionType()));
         req.setHint(aiResp.getHint());
         req.setAnswer(aiResp.getAnswer());
-        req.setPoint(dto.getCount());
+        req.setPoint(0);
 
         return req;
     }
