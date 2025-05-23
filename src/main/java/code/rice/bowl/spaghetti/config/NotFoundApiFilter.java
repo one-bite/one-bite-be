@@ -31,6 +31,7 @@ public class NotFoundApiFilter extends OncePerRequestFilter {
             "/webjars",
             // test 용도
             "/test",
+            // TODO: 임시로 추가하였으나 확인 요망
             "/ai");
 
     @Override

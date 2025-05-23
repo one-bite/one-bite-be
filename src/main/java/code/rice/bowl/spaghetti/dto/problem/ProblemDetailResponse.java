@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 public class ProblemDetailResponse {
     Long problemId;
-    QuestionType type;
+    QuestionType questionType;
     String title;
     JsonNode description;
     String answer;
