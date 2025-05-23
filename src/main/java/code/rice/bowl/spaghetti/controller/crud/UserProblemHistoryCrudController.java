@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/db/history")
 @RequiredArgsConstructor
-@Tag(name = "UserProblemHistory")
+@Tag(name = "CRUD: UserProblemHistory")
 public class UserProblemHistoryCrudController {
 
     private final UserProblemHistoryService historyService;
@@ -23,7 +23,7 @@ public class UserProblemHistoryCrudController {
     @GetMapping("/user/{userId}")
     @Operation(summary = "문제풀이 기록 조회")
     public ResponseEntity<List<UserProblemHistoryResponse>> getUserHistories(@PathVariable Long userId) {
-        return ResponseEntity.ok(historyService.getHistoriesByUserId(userId));
+        return ResponseEntity.ok(historyService.getHistoriesByUser(userId));
     }
 
     // 프로필 화면 통계 제공 (푼 문제 수, 맞은 문제 수, 정답률)

@@ -12,9 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Topic {
 
-    /**
-     * 자동증분 ID
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_id")
@@ -28,5 +25,7 @@ public class Topic {
 
     private String description;
 
-    private int total;
+    @Column(nullable = false)
+    @Builder.Default
+    private int total = 0;
 }

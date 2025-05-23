@@ -1,8 +1,11 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
+import code.rice.bowl.spaghetti.entity.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * 용도
@@ -14,5 +17,5 @@ import lombok.Getter;
 public class ProblemSimpleResponse {
     private Long problemId;
     private String title;
-    private int score;  // 문제 점수
+    private List<Topic> topics;  // 문제 점수
 }

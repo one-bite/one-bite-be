@@ -1,6 +1,8 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.JwtTokenDto;
+import code.rice.bowl.spaghetti.exception.NotFoundException;
+import code.rice.bowl.spaghetti.repository.UserRepository;
 import code.rice.bowl.spaghetti.utils.LoginProvider;
 import code.rice.bowl.spaghetti.dto.request.LoginRequest;
 import code.rice.bowl.spaghetti.entity.User;
@@ -8,12 +10,16 @@ import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.exception.NotImplementedException;
 import code.rice.bowl.spaghetti.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+    private final UserRepository userRepository;
 
     private final UserService userService;
     private final AdminService adminService;
@@ -114,5 +120,22 @@ public class AuthService {
             return googleLoginService.getGoogleEmail(request.getAccessToken());
         }
         throw new NotImplementedException(request.getProvider() + " method isn't implemented");
+    }
+
+    /** SecurityContext 에서 principal(이메일)을 꺼내 → DB 조회 → ID 반환 */
+    public Long getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new InvalidRequestException("인증 정보가 없습니다.");
+        }
+
+        // principal은 org.springframework.security.core.userdetails.User
+        String email = ((org.springframework.security.core.userdetails.User) auth.getPrincipal())
+                .getUsername();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다. email=" + email));
+
+        return user.getUserId();  // 엔티티 PK getter
     }
 }
