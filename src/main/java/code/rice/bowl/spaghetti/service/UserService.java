@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.user.UserPatchRequest;
 import code.rice.bowl.spaghetti.dto.user.UserCurrentResponse;
+import code.rice.bowl.spaghetti.dto.user.UserRankResponse;
 import code.rice.bowl.spaghetti.entity.Streak;
 import code.rice.bowl.spaghetti.entity.User;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
@@ -59,6 +60,18 @@ public class UserService {
     }
 
     /**
+     * 사용자의 레이팅 정보 업데이트
+     */
+    @Transactional
+    public void updateRating(String email, int rating) {
+        User now = getUser(email);
+
+        now.setRating(Math.max(rating, now.getRating()));
+
+        now.setRank(rankService.getUserRank(now.getRating()));
+    }
+
+    /**
      * 사용자 이메일로 사용자 정보 조회하기
      * 새로운 회원인 경우 DB에 추가 후 리턴.
      *
@@ -87,6 +100,18 @@ public class UserService {
 
             return newUser;
         }
+    }
+
+    /**
+     * 사용자의 랭크 정보 조회
+     */
+    public UserRankResponse getUserRank(String email) {
+        User now = getUser(email);
+
+        return UserRankResponse.builder()
+                .name(now.getRank().getName())
+                .point(now.getRating())
+                .build();
     }
 
     /**

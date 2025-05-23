@@ -89,15 +89,16 @@ public class ProblemService {
      * 단일 문제 조회
      */
     public ProblemResponse findById(Long id) {
-        Problem problem = problemRepository.findById(id)
-                .orElseThrow(() -> new InvalidRequestException("Problem not found"));
-        return ProblemMapper.toDto(problem);
+        return ProblemMapper.toDto(getProblem(id));
     }
 
     public ProblemDetailResponse getProblemDetail(Long id) {
-        Problem problem = problemRepository.findById(id)
+        return ProblemMapper.toDetailDto(getProblem(id));
+    }
+
+    public Problem getProblem(Long id) {
+        return problemRepository.findById(id)
                 .orElseThrow(() -> new InvalidRequestException("Problem not found"));
-        return ProblemMapper.toDetailDto(problem);
     }
 
     public long totalProblem() {
