@@ -79,7 +79,6 @@ public class ChallengeService {
                 .build();
     }
 
-
     public ChallengeSubmitResponse challengeGrading(String email, SubmitRequest request) {
         // 0. 사용자 정보 조회.
         User user = userService.getUser(email);
@@ -109,10 +108,13 @@ public class ChallengeService {
 
         // 5. 종료 여부 체크
         if (nowUser.getHp() <= 0) {
-            // TODO: 점수 정산 및 뱃지 부여 코드 추가.
+            // 레이팅과 뱃지 업데이트
+            userService.updateRating(email, nowUser.getScore());
 
+            // 이번 트라이 정보 삭제
             redisService.delete(userKey);
 
+            // 결과 리턴.
             return ChallengeSubmitResponse.builder()
                     .correct(isCorrect)
                     .score(nowUser.getScore())
