@@ -114,7 +114,7 @@ public class RankService {
      * @return          현재 사용자 Rank.
      */
     public Rank getUserRank(int rating) {
-        return rankRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThan(0, 0)
+        return rankRepository.findByMinRatingLessThanEqualAndMaxRatingGreaterThanEqual(rating, rating)
                 .orElseThrow(() -> new NotFoundException("Rank : not found"));
     }
 }
