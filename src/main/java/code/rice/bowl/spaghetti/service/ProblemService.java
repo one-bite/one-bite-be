@@ -172,22 +172,11 @@ public class ProblemService {
     }
 
     @Transactional
-    public String getOrGenerateCommentary(Long problemId) {
+    public void updateCommentary(Long problemId, String commentary) {
         Problem problem = problemRepository.findById(problemId)
-                .orElseThrow(() -> new InvalidRequestException("문제를 찾을 수 없습니다."));
-
-        if (problem.getCommentary() != null && !problem.getCommentary().isBlank()) {
-            return problem.getCommentary();
-        }
-
-        // AI에게 해설 요청
-        String generatedCommentary = aiService.generateCommentary(problem);
-
-        // 저장
-        problem.setCommentary(generatedCommentary);
+                .orElseThrow(() -> new InvalidRequestException("Problem not found: " + problemId));
+        problem.setCommentary(commentary);
         problemRepository.save(problem);
-
-        return generatedCommentary;
     }
 
     public ProblemStatsResponse getMyProblemStats() {

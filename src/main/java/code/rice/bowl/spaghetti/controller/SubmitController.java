@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,13 +20,11 @@ public class SubmitController {
     // 오늘의 문제 채점
     @PostMapping("/today")
     @Operation(summary = "사용자가 제출한 문제 채점 및 결과 반환")
-    public ResponseEntity<?> solveProblem(
-            @RequestBody SubmitRequest request,
-            @AuthenticationPrincipal(expression = "username") String email
+    public ResponseEntity<SubmitResponse> solveProblem(
+            @RequestBody SubmitRequest request
     ) {
-        return ResponseEntity.ok(gradingService.gradeTodayProblem(email, request));
+        SubmitResponse result = gradingService.gradeTodayProblem(request);
+        return ResponseEntity.ok(result);
     }
 
-    // 랭크 문제 채점.
-    // -> 벼로도 빼놓을 것인가?
 }

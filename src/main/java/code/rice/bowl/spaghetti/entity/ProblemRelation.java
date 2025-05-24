@@ -1,4 +1,3 @@
-// src/main/java/code/rice/bowl/spaghetti/entity/ProblemRelation.java
 package code.rice.bowl.spaghetti.entity;
 
 import jakarta.persistence.*;
