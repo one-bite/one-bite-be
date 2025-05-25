@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AiServerProblemRequest {
     private String description;
-    private List<String> topics;
+    private String topics;
     private String questionType;
 }

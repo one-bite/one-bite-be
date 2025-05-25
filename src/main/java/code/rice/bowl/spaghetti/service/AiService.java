@@ -45,11 +45,11 @@ public class AiService {
             }
         }
         String descString = sb.toString();
-
+        String topicsJoined = String.join(",", dto.getTopics());
         // 2. AI 서버에 보낼 요청 DTO
         AiServerProblemRequest serverDto = new AiServerProblemRequest(
                 descString,
-                dto.getTopics(),
+                topicsJoined,
                 dto.getQuestionType()
         );
 
@@ -119,10 +119,10 @@ public class AiService {
             }
         }
         String descString = sb.toString();
-
+        String topicsJoined = String.join(",", dto.getTopics());
         // (b) AI 문제 생성 요청
         AiServerProblemRequest req = new AiServerProblemRequest(
-                descString, dto.getTopics(), dto.getQuestionType()
+                descString, topicsJoined, dto.getQuestionType()
         );
         AiProblemResponse aiResp = restTemplate.postForObject(
                 aiBaseUrl + "/generate-question", req, AiProblemResponse.class
