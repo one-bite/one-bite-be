@@ -28,6 +28,8 @@ public class GradingService {
     private final StreakService streakService;
     private final TodayProblemService todayProblemService;
     private final AiService aiService;
+    private final ProblemService problemService;
+    private final ProblemRelationService problemRelationService;
 
     /**
      * 문제 채점 및 오답 시 AI 문제 자동 생성
@@ -69,7 +71,14 @@ public class GradingService {
             aiReq.setQuestionType(problem.getQuestionType().name());
 
             // 비동기 호출
-            aiService.generateProblemRequestAsync(aiReq);
+            aiService.generateProblemRequestAsync(aiReq)
+                    .thenApply(reqDto -> problemService.create(reqDto))
+                    .thenAccept(problemResp ->
+                            problemRelationService.createRelation(
+                                    problem.getProblemId(),
+                                    problemResp.getProblemId()
+                            )
+                    );
         }
 
         // 5) 제출 상태 저장 및 스트릭 업데이트

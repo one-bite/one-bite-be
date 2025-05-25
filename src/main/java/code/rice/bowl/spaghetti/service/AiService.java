@@ -108,7 +108,7 @@ public class AiService {
 
 
     public AiProblemResponse generateProblemWithCommentary(AiProblemRequest dto) {
-        // (a) description(JsonNode) → String 직렬화
+        // (a) description(JsonNode) -> String 직렬화
         StringBuilder sb = new StringBuilder(dto.getDescription().path("question").asText());
         JsonNode opts = dto.getDescription().path("options");
         if (opts.isArray()) {
@@ -145,10 +145,16 @@ public class AiService {
     }
 
     /**
-     * 비동기 문제 요청 및 후속 관계 생성
+     * 비동기 처리
      */
     @Async
     public CompletableFuture<ProblemRequest> generateProblemRequestAsync(AiProblemRequest dto) {
         return CompletableFuture.completedFuture(generateProblemRequest(dto));
+    }
+
+    @Async
+    public CompletableFuture<String> generateCommentaryAsync(JsonNode description) {
+        String commentary = generateCommentary(description);
+        return CompletableFuture.completedFuture(commentary);
     }
 }

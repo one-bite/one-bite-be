@@ -16,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/problem")
@@ -26,13 +29,17 @@ public class ProblemController {
     private final ChallengeService challengeService;
     private final AiService aiService;
 
-    /** 문제 정보 상세 조회 */
+    /**
+     * 문제 정보 상세 조회
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProblemDetailResponse> getProblemDetail(@PathVariable Long id) {
         return ResponseEntity.ok(problemService.getProblemDetail(id));
     }
 
-    /** 오늘의 챌린지 시작 */
+    /**
+     * 오늘의 챌린지 시작
+     */
     @GetMapping("/challenge")
     public ResponseEntity<?> startChallenge(
             @AuthenticationPrincipal(expression = "username") String email
@@ -40,7 +47,9 @@ public class ProblemController {
         return ResponseEntity.ok(challengeService.startChallenge(email));
     }
 
-    /** 챌린지 문제 채점 */
+    /**
+     * 챌린지 문제 채점
+     */
     @PostMapping("/challenge")
     public ResponseEntity<?> submitChallenge(
             @AuthenticationPrincipal(expression = "username") String email,
@@ -49,7 +58,9 @@ public class ProblemController {
         return ResponseEntity.ok(challengeService.challengeGrading(email, request));
     }
 
-    /** 나의 문제 통계 조회 */
+    /**
+     * 나의 문제 통계 조회
+     */
     @GetMapping("/stats")
     public ResponseEntity<ProblemStatsResponse> stats() {
         return ResponseEntity.ok(problemService.getMyProblemStats());
@@ -59,27 +70,26 @@ public class ProblemController {
      * AI 해설 생성/조회
      */
     @PostMapping("/commentary")
-    public ResponseEntity<CommentaryResponse> postCommentary(
+    public Callable<ResponseEntity<CommentaryResponse>> postCommentary(
             @RequestBody @Valid CommentaryRequest req
     ) {
-        String commentary;
-
-        if (req.getId() != null && req.getId() > 0) {
-            // DB 조회
-            var problem = problemService.getProblem(req.getId());
-
-            // 기존에 저장된 해설이 있으면 그대로, 없으면 새로 생성 후 저장
-            if (problem.getCommentary() != null && !problem.getCommentary().isBlank()) {
-                commentary = problem.getCommentary();
+        return () -> {
+            String commentary;
+            if (req.getId() != null && req.getId() > 0) {
+                var problem = problemService.getProblem(req.getId());
+                if (problem.getCommentary() != null && !problem.getCommentary().isBlank()) {
+                    commentary = problem.getCommentary();
+                } else {
+                    // 비동기 호출 후 결과 대기
+                    commentary = aiService.generateCommentaryAsync(req.getDescription())
+                            .get();
+                    problemService.updateCommentary(req.getId(), commentary);
+                }
             } else {
-                commentary = aiService.generateCommentary(req.getDescription());
-                problemService.updateCommentary(req.getId(), commentary);
+                commentary = aiService.generateCommentaryAsync(req.getDescription())
+                        .get();
             }
-        } else {
-            // id == 0인 경우: DB 저장 없이 AI 해설 생성만
-            commentary = aiService.generateCommentary(req.getDescription());
-        }
-
-        return ResponseEntity.ok(new CommentaryResponse(commentary));
+            return ResponseEntity.ok(new CommentaryResponse(commentary));
+        };
     }
 }
