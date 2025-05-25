@@ -129,18 +129,7 @@ public class AiService {
         );
         if (aiResp == null) throw new InternalServerError("AI 서버 문제 생성 실패");
 
-        // (c) AI 해설 생성 요청 (원본 설명 JSON 문자열로)
-        String commentary = restTemplate.postForObject(
-                aiBaseUrl + "/commentary",
-                aiResp.getDescription().toString(),
-                String.class
-        );
-        if (commentary == null || commentary.isBlank()) {
-            throw new InternalServerError("AI 서버 해설 생성 실패");
-        }
-
-        // (d) 해설을 DTO에 세팅 후 반환
-        aiResp.setCommentary(commentary);
+        aiResp.setCommentary("");
         return aiResp;
     }
 
