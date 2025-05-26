@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.Callable;
+
 @RestController
 @RequestMapping("/submit")
 @RequiredArgsConstructor
@@ -20,11 +22,13 @@ public class SubmitController {
     // 오늘의 문제 채점
     @PostMapping("/today")
     @Operation(summary = "사용자가 제출한 문제 채점 및 결과 반환")
-    public ResponseEntity<SubmitResponse> solveProblem(
+    public Callable<ResponseEntity<SubmitResponse>> solveProblem(
             @RequestBody SubmitRequest request
     ) {
-        SubmitResponse result = gradingService.gradeTodayProblem(request);
-        return ResponseEntity.ok(result);
+        return () -> {
+            SubmitResponse result = gradingService.gradeTodayProblem(request);
+            return ResponseEntity.ok(result);
+        };
     }
 
 }
