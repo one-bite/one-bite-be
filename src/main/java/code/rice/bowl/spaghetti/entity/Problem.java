@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.entity;
-
 import code.rice.bowl.spaghetti.utils.JsonNodeConverter;
+import code.rice.bowl.spaghetti.utils.QuestionType;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,11 +26,14 @@ public class Problem {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    /**
+     * 다대다로 변경된 토픽 매핑
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "problem_topic",
             joinColumns = @JoinColumn(name = "problem_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_code")
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     @Builder.Default
     private List<Topic> topics = new ArrayList<>();
@@ -54,13 +58,11 @@ public class Problem {
 
     private String answer;
 
+    @Column(nullable = true)
+    private String commentary;
+
     @Column(nullable = false, columnDefinition = "INT DEFAULT 10")
     @Builder.Default
     private int point = 10;
 
-    public enum QuestionType {
-        multiple_choice,
-        short_answer,
-        true_false
-    }
 }

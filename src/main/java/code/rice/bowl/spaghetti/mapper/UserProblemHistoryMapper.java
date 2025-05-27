@@ -9,7 +9,7 @@ public class UserProblemHistoryMapper {
         return UserProblemHistoryResponse.builder()
                 .historyId(history.getHistoryId())
                 .userId(history.getUser().getUserId())
-                .problemId(history.getProblem().getProblemId())
+                .problem(ProblemMapper.toSimpleDto(history.getProblem()))
                 .submittedAnswer(history.getSubmittedAnswer())
                 .isCorrect(history.getIsCorrect())
                 .solveTime(history.getSolveTime())

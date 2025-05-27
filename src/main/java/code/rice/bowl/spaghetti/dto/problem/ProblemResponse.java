@@ -1,6 +1,7 @@
 package code.rice.bowl.spaghetti.dto.problem;
 
-import code.rice.bowl.spaghetti.entity.Problem.QuestionType;
+
+import code.rice.bowl.spaghetti.utils.QuestionType;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +26,7 @@ public class ProblemResponse {
     private int point;
     private Long categoryId;
     private Long userId;
+    private String commentary;
     private List<String> topicNames;
 }
+

@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
+    long countByUserIsNull();
+
     Optional<Problem> findByTitle(String title);
 }

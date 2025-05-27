@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface UserProblemHistoryRepository extends JpaRepository<UserProblemHistory, Long> {
+    long countByUserUserIdAndProblemUserIsNull(Long userId);
+
     List<UserProblemHistory> findByUserUserId(Long userId);
     List<UserProblemHistory> findTop10ByUserUserIdOrderBySubmittedAtDesc(Long userId);
     List<UserProblemHistory> findByProblemProblemId(Long problemId);

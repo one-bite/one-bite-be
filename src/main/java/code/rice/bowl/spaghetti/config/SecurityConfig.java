@@ -2,6 +2,7 @@ package code.rice.bowl.spaghetti.config;
 
 import code.rice.bowl.spaghetti.exception.JwtAccessDeniedHandler;
 import code.rice.bowl.spaghetti.exception.JwtAuthenticationEntryPoint;
+import org.springframework.scheduling.annotation.EnableAsync;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.service.RedisService;
 import code.rice.bowl.spaghetti.utils.JwtProvider;
@@ -23,6 +24,7 @@ import java.rmi.AccessException;
 
 @Configuration
 @EnableWebSecurity
+@EnableAsync
 @RequiredArgsConstructor
 public class SecurityConfig {
 

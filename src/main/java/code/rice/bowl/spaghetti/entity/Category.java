@@ -1,5 +1,4 @@
 package code.rice.bowl.spaghetti.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +29,8 @@ public class Category {
      * 이 카테고리에 속한 문제의 총 개수
      */
     @Column(nullable = false)
-    private int total;
+    @Builder.Default
+    private int total = 0;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default

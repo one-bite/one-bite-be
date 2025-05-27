@@ -8,6 +8,7 @@ import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 
 @Service
+@RequiredArgsConstructor
 public class GoogleLoginService {
     @Value("${google.oauth.client-id}")
     private String googleClientId;
@@ -26,6 +28,8 @@ public class GoogleLoginService {
 
     @Value("${google.oauth.redirect-uri}")
     private String googleRedirectUri;
+
+    private final RestTemplate restTemplate;
 
     /**
      * auth code 를 이용하여 구글으로 부터 액세스 토큰 발급.
@@ -49,7 +53,7 @@ public class GoogleLoginService {
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         try {
-            ResponseEntity<GoogleTokenResponse> response = new RestTemplate().exchange(
+            ResponseEntity<GoogleTokenResponse> response = restTemplate.exchange(
                     tokenUri,
                     HttpMethod.POST,
                     request,
@@ -116,7 +120,7 @@ public class GoogleLoginService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<GoogleUserInfoResponse> res = new RestTemplate().exchange(
+            ResponseEntity<GoogleUserInfoResponse> res = restTemplate.exchange(
                     infoUri,
                     HttpMethod.GET,
                     request,

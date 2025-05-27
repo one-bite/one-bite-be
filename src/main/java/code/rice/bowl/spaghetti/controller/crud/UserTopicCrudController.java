@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/db/user-topic")
 @RequiredArgsConstructor
-@Tag(name = "UserTopic")
+@Tag(name = "CRUD: UserTopic")
 public class UserTopicCrudController {
 
     private final UserTopicService userTopicService;
