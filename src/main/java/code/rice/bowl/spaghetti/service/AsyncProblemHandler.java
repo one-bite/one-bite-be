@@ -23,6 +23,8 @@ public class AsyncProblemHandler {
         try {
             ProblemRequest pr = aiService.generateProblemRequest(aiReq);
             ProblemResponse saved = problemService.create(pr);
+
+            System.out.println(saved.getProblemId());
             problemRelationService.createRelation(parentProblemId, saved.getProblemId());
         } catch (Exception ex) {
             log.error("Failed to generate & save AI problem: parentId={}", parentProblemId, ex);
