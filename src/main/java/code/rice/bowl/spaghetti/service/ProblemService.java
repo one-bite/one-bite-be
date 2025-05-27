@@ -1,10 +1,7 @@
 package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.problem.*;
-import code.rice.bowl.spaghetti.entity.Category;
-import code.rice.bowl.spaghetti.entity.Problem;
-import code.rice.bowl.spaghetti.entity.Topic;
-import code.rice.bowl.spaghetti.entity.User;
+import code.rice.bowl.spaghetti.entity.*;
 import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.mapper.ProblemMapper;
 import code.rice.bowl.spaghetti.repository.*;
@@ -68,9 +65,15 @@ public class ProblemService {
 
         Problem saved = problemRepository.save(problem);
 
-        // 관리자가 만든 문제.
         if (user == null) {
+            // 관리자가 만든 문제 -> 코스에 추가.
             courseService.addCourse(saved);
+        } else {
+            // 사용자의 틀린 문제에 대하여 생성한 AI 문제 추가.
+            user.getNotSolveAiProblems().add(NotSolveProblem.builder()
+                            .user(user)
+                            .problem(problem)
+                            .build());
         }
 
         return ProblemMapper.toDto(saved);
