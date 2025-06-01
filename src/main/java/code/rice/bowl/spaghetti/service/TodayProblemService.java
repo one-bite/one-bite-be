@@ -91,6 +91,31 @@ public class TodayProblemService {
                 .build();
     }
 
+    public UserTodayProblemResponse getUserTodayLogs(String email) {
+        User now = userService.getUser(email);
+
+        List<TodayProblem> todayProblems;
+
+        if (now.getTodayProblems().isEmpty()) {
+            todayProblems = createTodayProblems(now);
+        } else {
+            todayProblems =  now.getTodayProblems();
+        }
+
+        List<Boolean> isSolved = new ArrayList<>();
+        List<ProblemDetailResponse> problems = new ArrayList<>();
+
+        for (TodayProblem tp : todayProblems) {
+            isSolved.add(tp.isSubmitYN());
+            problems.add(ProblemMapper.toDetailDto(tp.getProblem()));
+        }
+
+        return UserTodayProblemResponse.builder()
+                .problemStatus(isSolved)
+                .problemList(problems)
+                .build();
+    }
+
     /**
      * 오늘의 문제에 대하여 모두 해결 여부를 나타냄.
      * 
