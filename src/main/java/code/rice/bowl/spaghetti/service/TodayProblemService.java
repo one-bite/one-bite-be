@@ -71,7 +71,7 @@ public class TodayProblemService {
         List<TodayProblem> todayProblems;
 
         // 1. 오늘에 풀어야 하는 문제 필요한 경우. (생성)
-        if (now.getTodayProblems().isEmpty()) {
+        if (allSolve(now.getUserId())) {
             todayProblems = createTodayProblems(now);
         } else {
             todayProblems = now.getTodayProblems();
@@ -115,16 +115,19 @@ public class TodayProblemService {
             }
         }
 
-        // 모든 문제를 풀었으면 자동으로 해당 삭제.
-        user.getTodayProblems().clear();
-        user.setCourseId(user.getCourseId() + COURSE_PROBLEM_CNT);
-
         return true;
     }
 
     // 현재 사용자의 상태에 맞게 오늘 풀어야 하는 문제 데이터를 추가함.
     @Transactional
     private List<TodayProblem> createTodayProblems(User user) {
+
+        if (allSolve(user.getUserId())) {
+            // 모든 문제를 풀었으면 자동으로 해당 삭제.
+            user.getTodayProblems().clear();
+            user.setCourseId(user.getCourseId() + COURSE_PROBLEM_CNT);
+        }
+
         long start = user.getCourseId();
         List<TodayProblem> userProblems = new ArrayList<>();
 
