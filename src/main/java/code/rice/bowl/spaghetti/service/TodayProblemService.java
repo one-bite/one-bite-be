@@ -3,6 +3,7 @@ package code.rice.bowl.spaghetti.service;
 import code.rice.bowl.spaghetti.dto.problem.ProblemDetailResponse;
 import code.rice.bowl.spaghetti.dto.user.UserTodayProblemResponse;
 import code.rice.bowl.spaghetti.entity.*;
+import code.rice.bowl.spaghetti.exception.InternalServerError;
 import code.rice.bowl.spaghetti.exception.NotFoundException;
 import code.rice.bowl.spaghetti.mapper.ProblemMapper;
 import code.rice.bowl.spaghetti.repository.TodayProblemRepository;
@@ -147,10 +148,16 @@ public class TodayProblemService {
     @Transactional
     private List<TodayProblem> createTodayProblems(User user) {
 
-        if (allSolve(user.getUserId())) {
-            // 모든 문제를 풀었으면 자동으로 해당 삭제.
-            user.getTodayProblems().clear();
-            user.setCourseId(user.getCourseId() + COURSE_PROBLEM_CNT);
+        // 오늘의 문제를 처음 생성하는 것이 아닌 경우.
+        if (!user.getTodayProblems().isEmpty()) {
+            // 이미 모든 푼제가 다 풀어져 있어야 함.
+            if (allSolve(user.getUserId())) {
+                // 기존 오늘의 문제 삭제.
+                user.getTodayProblems().clear();
+                user.setCourseId(user.getCourseId() + COURSE_PROBLEM_CNT);
+            } else {
+                throw new InternalServerError("logic error: TodayProblemService.createTodayProblems");
+            }
         }
 
         long start = user.getCourseId();
