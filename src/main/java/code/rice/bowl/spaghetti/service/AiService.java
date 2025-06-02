@@ -70,7 +70,7 @@ public class AiService {
         req.setTopicCodes(List.copyOf(dto.getTopics()));
         req.setTitle(aiResp.getTitle());
         req.setDescription(aiResp.getDescription());
-        req.setQuestionType(QuestionType.valueOf(aiResp.getQuestionType()));
+        req.setQuestionType(QuestionType.toType(aiResp.getQuestionType()));
         req.setHint(aiResp.getHint());
         req.setAnswer(aiResp.getAnswer());
         req.setPoint(aiResp.getPoint());
