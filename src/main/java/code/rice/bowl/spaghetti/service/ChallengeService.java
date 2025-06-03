@@ -122,6 +122,9 @@ public class ChallengeService {
                     .build();
         }
 
+        // 6. 현재 상태 업데이트
+        redisService.setValue(userKey, nowUser.toString());
+
         return ChallengeSubmitResponse.builder()
                 .correct(isCorrect)
                 .score(nowUser.getScore())

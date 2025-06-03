@@ -49,6 +49,12 @@ public class UserController {
         return ResponseEntity.ok(todayProblemService.getUserTodayProblems(email));
     }
 
+    // 사용자의 오늘의 문제 조회2.
+    @GetMapping("/today/logs")
+    public ResponseEntity<?> getTodayLogs(@AuthenticationPrincipal(expression = "username") String email) {
+        return ResponseEntity.ok(todayProblemService.getUserTodayLogs(email));
+    }
+
     // 사용자의 스트릭 정보를 요청.
     @GetMapping("/streak")
     public ResponseEntity<?> getStreak(@AuthenticationPrincipal(expression = "username") String email) {
