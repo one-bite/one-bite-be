@@ -2,17 +2,18 @@ package code.rice.bowl.spaghetti.service;
 
 import code.rice.bowl.spaghetti.dto.ai.*;
 import code.rice.bowl.spaghetti.dto.problem.ProblemRequest;
-import code.rice.bowl.spaghetti.entity.Problem;
 import code.rice.bowl.spaghetti.exception.InternalServerError;
+import code.rice.bowl.spaghetti.exception.InvalidRequestException;
 import code.rice.bowl.spaghetti.utils.QuestionType;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.scheduling.annotation.Async;
@@ -46,6 +47,7 @@ public class AiService {
         }
         String descString = sb.toString();
         String topicsJoined = String.join(",", dto.getTopics());
+
         // 2. AI 서버에 보낼 요청 DTO
         AiServerProblemRequest serverDto = new AiServerProblemRequest(
                 descString,
@@ -53,12 +55,22 @@ public class AiService {
                 dto.getQuestionType()
         );
 
-        // 3. AI 서버 호출 → AiProblemResponse 사용
-        AiProblemResponse aiResp = restTemplate.postForObject(
-                aiBaseUrl + "/generate-question",
-                serverDto,
-                AiProblemResponse.class
-        );
+        // 3. AI 서버 호출
+        AiProblemResponse aiResp;
+        try {
+            aiResp = restTemplate.postForObject(
+                    aiBaseUrl + "/generate-question",
+                    serverDto,
+                    AiProblemResponse.class
+            );
+        } catch (HttpStatusCodeException ex) {
+            if (ex.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                throw new InvalidRequestException("API 일일 사용량을 초과했습니다. 나중에 다시 시도하세요. (no_token)");
+            }
+            // 그 외
+            throw new InternalServerError("AI 서버 호출 중 오류 발생: " + ex.getStatusCode());
+        }
+
         if (aiResp == null) {
             throw new InternalServerError("AI server returned null response");
         }
@@ -91,14 +103,22 @@ public class AiService {
     public String generateCommentary(JsonNode description) {
         // 1) JSON → String 직렬화
         String payload = description.toString();
+        AiCommentaryRequest req = new AiCommentaryRequest(payload);
 
         // 2) AI 서버에 JSON 바디로 요청
-        AiCommentaryRequest req = new AiCommentaryRequest(payload);
-        AiCommentaryResponse resp = restTemplate.postForObject(
-                aiBaseUrl + "/commentary",
-                req,
-                AiCommentaryResponse.class
-        );
+        AiCommentaryResponse resp;
+        try {
+            resp = restTemplate.postForObject(
+                    aiBaseUrl + "/commentary",
+                    req,
+                    AiCommentaryResponse.class
+            );
+        } catch (HttpStatusCodeException ex) {
+            if (ex.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                throw new InvalidRequestException("토큰 없습니다");
+            }
+            throw new InternalServerError("AI 서버 호출 중 오류 발생: " + ex.getStatusCode());
+        }
 
         if (resp == null || resp.getCommentary().isBlank()) {
             throw new InternalServerError("AI 서버 해설 생성 실패");
@@ -106,7 +126,9 @@ public class AiService {
         return resp.getCommentary();
     }
 
-
+    /**
+     * AI 서버로부터 문제와 해설까지 같이 받는 간단 버전 (서비스 레이어용)
+     */
     public AiProblemResponse generateProblemWithCommentary(AiProblemRequest dto) {
         // (a) description(JsonNode) -> String 직렬화
         StringBuilder sb = new StringBuilder(dto.getDescription().path("question").asText());
@@ -115,19 +137,30 @@ public class AiService {
             sb.append(" Options: ");
             for (int i = 0; i < opts.size(); i++) {
                 sb.append(opts.get(i).asText());
-                if (i < opts.size()-1) sb.append(", ");
+                if (i < opts.size() - 1) sb.append(", ");
             }
         }
         String descString = sb.toString();
         String topicsJoined = String.join(",", dto.getTopics());
-        // (b) AI 문제 생성 요청
         AiServerProblemRequest req = new AiServerProblemRequest(
                 descString, topicsJoined, dto.getQuestionType()
         );
-        AiProblemResponse aiResp = restTemplate.postForObject(
-                aiBaseUrl + "/generate-question", req, AiProblemResponse.class
-        );
-        if (aiResp == null) throw new InternalServerError("AI 서버 문제 생성 실패");
+
+        AiProblemResponse aiResp;
+        try {
+            aiResp = restTemplate.postForObject(
+                    aiBaseUrl + "/generate-question", req, AiProblemResponse.class
+            );
+        } catch (HttpStatusCodeException ex) {
+            if (ex.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                throw new InvalidRequestException("API 일일 사용량을 초과했습니다. 나중에 다시 시도하세요. (no_token)");
+            }
+            throw new InternalServerError("AI 서버 호출 중 오류 발생: " + ex.getStatusCode());
+        }
+
+        if (aiResp == null) {
+            throw new InternalServerError("AI 서버 문제 생성 실패");
+        }
 
         aiResp.setCommentary("");
         return aiResp;
