@@ -1,56 +1,124 @@
-name: Build and Push to Docker Hub
+name: Build, Push and Update GitOps (EKS)
 
 on:
-    push:
-        branches:
-            - main
-            - develop
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+concurrency:
+  group: onebite-cicd-backend-gitops
+  cancel-in-progress: false
 
 jobs:
-    build-and-push:
-        runs-on: ubuntu-latest
-        outputs:
-            branch: ${{ steps.vars.outputs.raw_ref }}
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+      alias_tag: ${{ steps.meta.outputs.alias_tag }}
+      prod_values_file: ${{ steps.meta.outputs.prod_values_file }}
+      dev_back_values_file: ${{ steps.meta.outputs.dev_back_values_file }}
+      dev_front_values_file: ${{ steps.meta.outputs.dev_front_values_file }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-            - name: Set up Docker image tags
-              id: vars
-              run: |
-                  raw_ref="${GITHUB_REF_NAME}"
-                  safe_ref="${raw_ref//\//-}"
-                  SHORT_SHA=$(git rev-parse --short HEAD)
-                  DATE_TAG=$(date +'%Y%m%d')
+      - name: Select immutable tag and GitOps values file
+        id: meta
+        shell: bash
+        run: |
+          image_tag="sha-${GITHUB_SHA}"
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "alias_tag=latest" >> "${GITHUB_OUTPUT}"
+            echo "prod_values_file=eks/cicd/values/backend-prod.yaml" >> "${GITHUB_OUTPUT}"
+            echo "dev_back_values_file=" >> "${GITHUB_OUTPUT}"
+            echo "dev_front_values_file=" >> "${GITHUB_OUTPUT}"
+          else
+            echo "alias_tag=dev" >> "${GITHUB_OUTPUT}"
+            echo "prod_values_file=" >> "${GITHUB_OUTPUT}"
+            echo "dev_back_values_file=eks/cicd/values/backend-dev-back.yaml" >> "${GITHUB_OUTPUT}"
+            echo "dev_front_values_file=eks/cicd/values/backend-dev-front.yaml" >> "${GITHUB_OUTPUT}"
+          fi
+          echo "image_tag=${image_tag}" >> "${GITHUB_OUTPUT}"
 
-                  if [ "$raw_ref" = "main" ]; then
-                    VERSION_TAG="${DATE_TAG}-${SHORT_SHA}"
-                    echo "TAGS=heung115/spaghetti-be:$VERSION_TAG,heung115/spaghetti-be:latest" >> $GITHUB_ENV
-                  else
-                    echo "TAGS=heung115/spaghetti-be:$safe_ref,heung115/spaghetti-be:dev" >> $GITHUB_ENV
-                  fi
-                  echo "raw_ref=$raw_ref" >> $GITHUB_OUTPUT
-
-            - name: Log in to Docker Hub
-              uses: docker/login-action@v3
-              with:
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
-
-            - name: Build and Push Docker Image
-              uses: docker/build-push-action@v5
-              with:
-                  context: .
-                  push: true
-                  tags: |
-                      ${{ env.TAGS }}
-
-    call-update-k8s:
-        needs: build-and-push
-        uses: ./.github/workflows/kubeconfig.yaml
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-            branch: ${{ needs.build-and-push.outputs.branch }}
-        secrets:
-            K8S_CA: ${{ secrets.K8S_CA }}
-            K8S_SERVER: ${{ secrets.K8S_SERVER }}
-            K8S_TOKEN: ${{ secrets.K8S_TOKEN }}
+          username: heung115
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            heung115/spaghetti-be:${{ steps.meta.outputs.image_tag }}
+            heung115/spaghetti-be:${{ steps.meta.outputs.alias_tag }}
+
+  update-gitops:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout CI/CD EKS GitOps path
+        uses: actions/checkout@v4
+        with:
+          repository: heung115/tmp-onebite-gitops
+          ref: eks
+          path: gitops
+          ssh-key: ${{ secrets.GITOPS_WRITE_KEY }}
+
+      - name: Update backend image tag in GitOps
+        env:
+          IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
+          PROD_VALUES_FILE: ${{ needs.build-and-push.outputs.prod_values_file }}
+          DEV_BACK_VALUES_FILE: ${{ needs.build-and-push.outputs.dev_back_values_file }}
+          DEV_FRONT_VALUES_FILE: ${{ needs.build-and-push.outputs.dev_front_values_file }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          update_tag() {
+            local values_file="$1"
+            local file="gitops/${values_file}"
+            test -f "${file}"
+            sed -i -E "s|^  tag: .*|  tag: \"${IMAGE_TAG}\"|" "${file}"
+            grep -Fx "  tag: \"${IMAGE_TAG}\"" "${file}"
+            git -C gitops add "${values_file}"
+          }
+          if [[ -n "${PROD_VALUES_FILE}" ]]; then
+            update_tag "${PROD_VALUES_FILE}"
+          fi
+          if [[ -n "${DEV_BACK_VALUES_FILE}" ]]; then
+            update_tag "${DEV_BACK_VALUES_FILE}"
+          fi
+          if [[ -n "${DEV_FRONT_VALUES_FILE}" ]]; then
+            update_tag "${DEV_FRONT_VALUES_FILE}"
+          fi
+          git -C gitops diff --check
+          git -C gitops config user.name "github-actions[bot]"
+          git -C gitops config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git -C gitops diff --cached --quiet; then
+            echo "GitOps already points to ${IMAGE_TAG}; no commit needed."
+            exit 0
+          fi
+          git -C gitops commit -m "deploy(cicd): spaghetti-be ${IMAGE_TAG} [skip ci]"
+          for attempt in 1 2 3 4 5; do
+            if ! git -C gitops fetch origin eks; then
+              sleep "${attempt}"
+              continue
+            fi
+            if ! git -C gitops rebase origin/eks; then
+              git -C gitops rebase --abort || true
+              sleep "${attempt}"
+              continue
+            fi
+            if git -C gitops push origin HEAD:eks; then
+              exit 0
+            fi
+            sleep "${attempt}"
+          done
+          echo "Unable to push the GitOps update after five attempts." >&2
+          exit 1
