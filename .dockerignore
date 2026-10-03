@@ -1,0 +1,8 @@
+.git
+.gradle
+build
+out
+.env*
+*.pem
+*.log
+.DS_Store
